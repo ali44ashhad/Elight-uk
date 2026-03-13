@@ -1,0 +1,352 @@
+{
+  "info": {
+    "name": "Elite Backend - UK Real Estate",
+    "description": "API for UK real estate investment website: inquiries, properties, deals, admin.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "port", "value": "4000" },
+    { "key": "baseUrl", "value": "http://localhost:{{port}}" },
+    { "key": "token", "value": "" },
+    { "key": "propertyId", "value": "" },
+    { "key": "propertyImageId", "value": "" },
+    { "key": "dealId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Public",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/health"
+          }
+        },
+        {
+          "name": "List Properties (sets propertyId)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const body = pm.response.json();",
+                  "const arr = Array.isArray(body) ? body : body.data;",
+                  "if (arr && arr.length) {",
+                  "  const first = arr[0];",
+                  "  const pid = first.id || first._id;",
+                  "  if (pid) { pm.environment.set('propertyId', pid); pm.collectionVariables.set('propertyId', pid); }",
+                  "  const imgId = first.images && first.images[0] && (first.images[0].id || first.images[0]._id);",
+                  "  if (imgId) { pm.environment.set('propertyImageId', imgId); pm.collectionVariables.set('propertyImageId', imgId); }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/properties"
+          }
+        },
+        {
+          "name": "List Properties (paginated)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/properties?page=1&limit=10"
+          }
+        },
+        {
+          "name": "Create Inquiry (Hero)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"phone\": \"+44 7700 900000\",\n  \"budget\": \"£50,000\",\n  \"message\": \"Interested in UK property investment\"\n}"
+            },
+            "url": "{{baseUrl}}/api/inquiries"
+          }
+        },
+        {
+          "name": "Create Inquiry (Property)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Smith\",\n  \"email\": \"jane@example.com\",\n  \"phone\": \"+44 7700 900001\",\n  \"budget\": \"£30,000\",\n  \"message\": \"I am interested in this property\",\n  \"source\": \"property\",\n  \"propertyId\": \"{{propertyId}}\"\n}"
+            },
+            "url": "{{baseUrl}}/api/inquiries"
+          }
+        },
+        {
+          "name": "Get Property by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/properties/{{propertyId}}"
+          }
+        },
+        {
+          "name": "Create Deal (I Am Interested)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "const did = res.id || res._id;",
+                  "if (did) { pm.environment.set('dealId', did); pm.collectionVariables.set('dealId', did); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propertyId\": \"{{propertyId}}\",\n  \"investorName\": \"Alex Investor\",\n  \"investorEmail\": \"alex@example.com\",\n  \"investorPhone\": \"+44 7700 900002\",\n  \"budget\": \"£25,000\",\n  \"message\": \"Would like to proceed with this deal\"\n}"
+            },
+            "url": "{{baseUrl}}/api/deals"
+          }
+        },
+        {
+          "name": "Get Deal by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/deals/{{dealId}}"
+          }
+        },
+        {
+          "name": "Reject Deal (Investor)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/api/deals/{{dealId}}/reject"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.token) {",
+                  "  pm.collectionVariables.set('token', res.token);",
+                  "  pm.environment.set('token', res.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@elite.co.uk\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": "{{baseUrl}}/api/admin/login"
+          }
+        },
+        {
+          "name": "Get Me",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/admin/me"
+          }
+        },
+        {
+          "name": "List Inquiries",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/admin/inquiries?source=hero"
+          }
+        },
+        {
+          "name": "List Inquiries (paginated)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/admin/inquiries?source=hero&page=1&limit=20"
+          }
+        },
+        {
+          "name": "List Properties",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/admin/properties"
+          }
+        },
+        {
+          "name": "List Admin Properties (paginated)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/admin/properties?page=1&limit=20"
+          }
+        },
+        {
+          "name": "Create Property",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "const pid = res.id || res._id;",
+                  "if (pid) { pm.environment.set('propertyId', pid); pm.collectionVariables.set('propertyId', pid); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"2 Bed Flat in Birmingham\",\n  \"location\": \"Birmingham, UK\",\n  \"monthlyRent\": 950,\n  \"expectedProfit\": 120,\n  \"roi\": 15,\n  \"investmentAmount\": 9500,\n  \"tenancyDetails\": \"6-month AST\",\n  \"status\": \"Available\",\n  \"sortOrder\": 50\n}"
+            },
+            "url": "{{baseUrl}}/api/admin/properties"
+          }
+        },
+        {
+          "name": "Get Property by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/admin/properties/{{propertyId}}"
+          }
+        },
+        {
+          "name": "Update Property",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"2 Bed Flat in Birmingham (Updated)\",\n  \"monthlyRent\": 1000,\n  \"roi\": 16\n}"
+            },
+            "url": "{{baseUrl}}/api/admin/properties/{{propertyId}}"
+          }
+        },
+        {
+          "name": "Upload Property Images",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (Array.isArray(res) && res.length) {",
+                  "  const imgId = res[0].id || res[0]._id;",
+                  "  if (imgId) { pm.environment.set('propertyImageId', imgId); pm.collectionVariables.set('propertyImageId', imgId); }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "images", "type": "file", "src": [], "description": "Select one or more image files" }
+              ]
+            },
+            "url": "{{baseUrl}}/api/admin/properties/{{propertyId}}/images"
+          }
+        },
+        {
+          "name": "Delete Property Image",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/admin/properties/{{propertyId}}/images/{{propertyImageId}}"
+          }
+        },
+        {
+          "name": "Delete Property",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/admin/properties/{{propertyId}}"
+          }
+        },
+        {
+          "name": "List Deals",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/admin/deals"
+          }
+        },
+        {
+          "name": "List Deals (paginated)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/admin/deals?page=1&limit=20"
+          }
+        },
+        {
+          "name": "Deal - Record Payment (Under Offer + 14d)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"record_payment\"\n}"
+            },
+            "url": "{{baseUrl}}/api/admin/deals/{{dealId}}"
+          }
+        },
+        {
+          "name": "Deal - Mark Refunded",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"mark_refunded\"\n}"
+            },
+            "url": "{{baseUrl}}/api/admin/deals/{{dealId}}"
+          }
+        },
+        {
+          "name": "Deal - Mark Sold",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"mark_sold\"\n}"
+            },
+            "url": "{{baseUrl}}/api/admin/deals/{{dealId}}"
+          }
+        }
+      ]
+    }
+  ]
+}
