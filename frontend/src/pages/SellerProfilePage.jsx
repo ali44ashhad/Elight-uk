@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import * as api from '../api'
-import { Header } from '../components/layout/Header'
-import { Footer } from '../components/layout/Footer'
+import { Header } from '../components/Layout/Header'
+import { Footer } from '../components/Layout/Footer'
 import { Card } from '../components/ui/Card'
 
 function formatMoney(n) {

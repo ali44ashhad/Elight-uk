@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import * as api from '../api'
-import { Footer } from '../components/layout/Footer'
+import { Footer } from '../components/Layout/Footer'
 import { FeaturedOpportunity } from '../components/home/FeaturedOpportunity'
-import { Header } from '../components/layout/Header'
+import { Header } from '../components/Layout/Header'
 import heroVideo from '../assets/hero.mp4'
 
 export function HomePage() {
