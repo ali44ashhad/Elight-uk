@@ -4,8 +4,8 @@ import { useAuth } from '../contexts/AuthContext'
 import { Button } from '../components/ui/Button'
 import { Card } from '../components/ui/Card'
 import { Input } from '../components/ui/Input'
-import { Header } from '../components/layout/Header'
-import { Footer } from '../components/layout/Footer'
+import { Header } from '../components/Layout/Header'
+import { Footer } from '../components/Layout/Footer'
 
 export function AdminLoginPage() {
   const nav = useNavigate()
