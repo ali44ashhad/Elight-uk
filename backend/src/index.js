@@ -20,7 +20,23 @@ import { runFourteenDayCron } from './jobs/fourteenDayCron.js';
 const app = express();
 const PORT = Number(process.env.PORT) || 4000;
 
-app.use(cors());
+const allowedOrigins = [
+  'https://elight-uk-393r.vercel.app',
+];
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      // Allow requests with no origin (e.g. server-to-server, health checks)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error('Not allowed by CORS'));
+    },
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: false,
+  })
+);
 app.use(express.json());
 
 // Public API
