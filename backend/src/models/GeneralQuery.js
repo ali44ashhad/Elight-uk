@@ -19,9 +19,6 @@ const generalQuerySchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
 generalQuerySchema.index({ createdAt: -1 });
 generalQuerySchema.index({ propertyType: 1, createdAt: -1 });
-
 export const GeneralQuery = mongoose.model('GeneralQuery', generalQuerySchema);
-

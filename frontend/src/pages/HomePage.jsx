@@ -115,7 +115,7 @@ export function HomePage() {
                   to="/getting-started"
                   className="group relative inline-flex items-center gap-2 rounded-full bg-slate-900 px-8 py-4 text-white transition-all hover:bg-slate-800"
                 >
-                  <span className="font-medium">SIGN UP</span>
+                  <span className="font-medium">Get Started</span>
                   <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
@@ -165,17 +165,47 @@ export function HomePage() {
                 </Link>
               </div> 
               <div className="grid grid-cols-2 gap-4">
-                {[1, 2, 3, 4].map((i) => (
+                {[
+                  {
+                    id: 1,
+                    title: 'Modern Apartment',
+                    location: 'Manchester',
+                    image: 'https://media.istockphoto.com/id/488120139/photo/modern-real-estate.jpg?s=612x612&w=0&k=20&c=88jk1VLSoYboMmLUx173sHs_XrZ9pH21as8lC7WINQs=',
+                  },
+                  {
+                    id: 2,
+                    title: 'City Retreat',
+                    location: 'Leeds',
+                    image: 'https://img.freepik.com/free-photo/side-view-front-doors-with-white-blue-wall_23-2149360616.jpg',
+                  },
+                  {
+                    id: 3,
+                    title: 'Cozy Townhouse',
+                    location: 'Liverpool',
+                    image: 'https://media.istockphoto.com/id/1616979010/photo/elegant-townhouses-london-england-uk-south-kensington.jpg?s=612x612&w=0&k=20&c=XMTyX7PIwn3kLIwBthpKoygNzJDzsIKMCtBeZFfNwIE=',
+                  },
+                  {
+                    id: 4,
+                    title: 'Suburban Home',
+                    location: 'Birmingham',
+                    image: 'https://images.unsplash.com/photo-1710883734889-5a0b8ab6bfcf?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8dWslMjBob3VzZXxlbnwwfHwwfHx8MA%3D%3D',
+                  },
+                ].map((card) => (
                   <div
-                    key={i}
+                    key={card.id}
                     className={`group relative aspect-square overflow-hidden rounded-2xl bg-slate-200 ${
-                      i === 1 ? 'translate-y-4' : i === 4 ? '-translate-y-4' : ''
+                      card.id === 1 ? 'translate-y-4' : card.id === 4 ? '-translate-y-4' : ''
                     }`}
                   >
+                    <img
+                      src={card.image}
+                      alt={card.title}
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
                     <div className="absolute bottom-4 left-4 text-white opacity-0 transition-opacity group-hover:opacity-100">
-                      <p className="text-sm font-medium">Modern Apartment</p>
-                      <p className="text-xs opacity-80">Manchester</p>
+                      <p className="text-sm font-medium">{card.title}</p>
+                      <p className="text-xs opacity-80">{card.location}</p>
                     </div>
                   </div>
                 ))}

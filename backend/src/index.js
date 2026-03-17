@@ -21,17 +21,15 @@ const app = express();
 const PORT = Number(process.env.PORT) || 4000;
 
 const allowedOrigins = [
-  'https://elight-uk-393r.vercel.app',
+  'https://elight-uk-393r.vercel.app', // production frontend
+  'http://localhost:5173',             // Vite dev
+  'http://localhost:5174',             // Vite dev
+  'http://localhost:3000',             // optional
 ];
 
 app.use(
   cors({
-    origin(origin, callback) {
-      // Allow requests with no origin (e.g. server-to-server, health checks)
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) return callback(null, true);
-      return callback(new Error('Not allowed by CORS'));
-    },
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: false,

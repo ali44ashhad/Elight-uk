@@ -1,100 +1,113 @@
-import { Link } from 'react-router-dom'
-import logo from '../../assets/logo.png'
-import { useState } from 'react'
+import { Link } from "react-router-dom";
+import logo from "../../assets/logo.png";
+import { useState } from "react";
 
-export function Header({ variant = 'dark' }) {
-  const [isOpen, setIsOpen] = useState(false)
-  const isDark = variant === 'dark'
+export function Header({ variant = "dark" }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const isDark = variant === "dark";
 
   const navItems = [
-    { to: '/', label: 'Home' },
-    { to: '/about-us', label: 'About Us' },
-    { to: '/getting-started', label: 'Getting Started' },
-  ]
+    { to: "/", label: "Home" },
+    { to: "/about-us", label: "About Us" },
+  ];
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full border-b backdrop-blur-md ${
-        isDark ? 'border-white/10 bg-slate-950/70' : 'border-slate-200/70 bg-white/80'
+      className={`sticky top-0 z-40 w-full border-b backdrop-blur-md ${
+        isDark
+          ? "border-white/10 bg-slate-950/80"
+          : "border-slate-200 bg-white/90"
       }`}
     >
-      <div className="mx-auto max-w-7xl px-4">
-        <div className="flex h-20 items-center justify-between"> 
-          <Link to="/" className="relative group">
-            <img 
-              src={logo} 
-              alt="Global Deal Sourcing" 
-              className="h-12 w-auto transition-transform group-hover:scale-105" 
-            />
-          </Link> 
-          <nav className="hidden items-center gap-1 md:flex">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+
+        {/* Top Header */}
+        <div className="flex h-16 items-center justify-between">
+
+          {/* Logo */}
+          <Link to="/" className="flex items-center">
+            <img src={logo} alt="logo" className="h-10 w-auto" />
+          </Link>
+
+          {/* Desktop Menu */}
+          <nav className="hidden md:flex items-center gap-8">
             {navItems.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
-                className={`group relative px-4 py-2 text-sm font-medium transition-colors ${
-                  isDark 
-                    ? 'text-white/90 hover:text-white' 
-                    : 'text-slate-700 hover:text-slate-900'
+                className={`text-lg font-semibold transition ${
+                  isDark
+                    ? "text-white/90 hover:text-white"
+                    : "text-slate-700 hover:text-slate-900"
                 }`}
               >
                 {item.label}
-                <span className={`absolute bottom-0 left-1/2 h-0.5 w-0 -translate-x-1/2 bg-current transition-all group-hover:w-full ${
-                  isDark ? 'bg-white' : 'bg-slate-900'
-                }`} />
               </Link>
             ))}
           </nav>
- 
+
+          {/* Desktop Button */}
           <div className="hidden md:block">
             <Link
-              to="/contact"
-              className={`rounded-full px-6 py-2 text-sm font-medium transition-all ${
+              to="/getting-started"
+              className={`rounded-full px-6 py-2 text-sm font-semibold transition ${
                 isDark
-                  ? 'border border-white/20 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20'
-                  : 'bg-slate-900 text-white hover:bg-slate-800'
+                  ? "border border-white/20 bg-white/10 text-white hover:bg-white/20"
+                  : "bg-slate-900 text-white hover:bg-slate-800"
               }`}
             >
-              Contact Us
+              Getting Started
             </Link>
-          </div> 
+          </div>
+
+          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className={`relative z-50 block md:hidden ${
-              isDark ? 'text-white' : 'text-slate-900'
+            className={`md:hidden text-3xl ${
+              isDark ? "text-white" : "text-slate-900"
             }`}
           >
-            <div className="space-y-1.5">
-              <span className={`block h-0.5 w-6 transition-all ${isOpen ? 'rotate-45 translate-y-2' : ''} bg-current`} />
-              <span className={`block h-0.5 w-6 transition-all ${isOpen ? 'opacity-0' : ''} bg-current`} />
-              <span className={`block h-0.5 w-6 transition-all ${isOpen ? '-rotate-45 -translate-y-2' : ''} bg-current`} />
-            </div>
-          </button> 
-          {isOpen && (
-            <div className="fixed inset-0 z-40 bg-slate-900/95 backdrop-blur-lg md:hidden">
-              <nav className="flex h-full flex-col items-center justify-center space-y-8">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.to}
-                    to={item.to}
-                    onClick={() => setIsOpen(false)}
-                    className="text-2xl font-light text-white transition-colors hover:text-emerald-400"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-                <Link
-                  to="/contact"
-                  onClick={() => setIsOpen(false)}
-                  className="mt-8 rounded-full border-2 border-white/20 px-10 py-3 text-lg text-white backdrop-blur-sm hover:bg-white/10"
-                >
-                  Contact Us
-                </Link>
-              </nav>
-            </div>
-          )}
+            {isOpen ? "✕" : "☰"}
+          </button>
+
         </div>
+
+        {/* Mobile Dropdown */}
+        <div
+          className={`md:hidden overflow-hidden transition-all duration-300 ${
+            isOpen ? "max-h-96 py-4" : "max-h-0"
+          }`}
+        >
+          <nav className="flex flex-col gap-5 pb-4">
+
+            {navItems.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={() => setIsOpen(false)}
+                className={`text-lg font-medium ${
+                  isDark
+                    ? "text-white/90 hover:text-white"
+                    : "text-slate-700 hover:text-slate-900"
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+
+            {/* Mobile Getting Started Button */}
+            <Link
+              to="/getting-started"
+              onClick={() => setIsOpen(false)}
+              className="mt-2 rounded-full px-5 py-2 text-center text-sm font-semibold bg-slate-900 text-white hover:bg-slate-800"
+            >
+              Getting Started
+            </Link>
+
+          </nav>
+        </div>
+
       </div>
     </header>
-  )
+  );
 }
