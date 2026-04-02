@@ -1,10 +1,64 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import * as api from '../api'
 import { Footer } from '../components/Layout/Footer'
 import { FeaturedOpportunity } from '../components/home/FeaturedOpportunity'
 import { Header } from '../components/Layout/Header'
 import heroVideo from '../assets/hero.mp4'
+
+function AnimatedNumber({ end, durationMs = 1400, suffix = '' }) {
+  const ref = useRef(null)
+  const [value, setValue] = useState(0)
+  const [hasRun, setHasRun] = useState(false)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el || hasRun) return
+
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)')?.matches
+
+    const start = () => {
+      if (hasRun) return
+      setHasRun(true)
+      if (prefersReducedMotion) {
+        setValue(end)
+        return
+      }
+
+      const startTs = performance.now()
+      const tick = (now) => {
+        const t = Math.min(1, (now - startTs) / durationMs)
+        const eased = 1 - Math.pow(1 - t, 3)
+        setValue(Math.round(end * eased))
+        if (t < 1) requestAnimationFrame(tick)
+      }
+      requestAnimationFrame(tick)
+    }
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          start()
+          obs.disconnect()
+        }
+      },
+      { threshold: 0.35 }
+    )
+
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [durationMs, end, hasRun])
+
+  return (
+    <span ref={ref}>
+      {value}
+      {suffix}
+    </span>
+  )
+}
 
 export function HomePage() {
   const [featured, setFeatured] = useState([])
@@ -330,13 +384,15 @@ export function HomePage() {
           <div className="mx-auto max-w-6xl px-4">
             <div className="grid grid-cols-2 gap-8 text-center md:grid-cols-4">
               {[
-                { label: 'Properties', value: '500+' },
-                { label: 'Investors', value: '2.5k+' },
-                { label: 'Cities', value: '25+' },
-                { label: 'ROI', value: '12%' },
+                { label: 'Properties', end: 500, suffix: '+' },
+                { label: 'Investors', end: 2500, suffix: '+' },
+                { label: 'Cities', end: 25, suffix: '+' },
+                { label: 'ROI', end: 12, suffix: '%' },
               ].map((stat) => (
                 <div key={stat.label} className="space-y-2">
-                  <div className="text-3xl font-bold text-slate-900 lg:text-4xl">{stat.value}</div>
+                  <div className="text-3xl font-bold text-slate-900 lg:text-4xl">
+                    <AnimatedNumber end={stat.end} suffix={stat.suffix} />
+                  </div>
                   <div className="text-sm text-slate-600">{stat.label}</div>
                 </div>
               ))}
