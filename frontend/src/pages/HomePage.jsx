@@ -118,9 +118,9 @@ export function HomePage() {
                 className="absolute inset-0 cursor-default bg-black/70"
                 onClick={() => setIsMailchimpOpen(false)}
               />
-              <div className="relative z-10 w-full max-w-xl overflow-hidden rounded-2xl bg-white shadow-2xl">
+              <div className="relative z-10 w-full max-w-3xl overflow-hidden rounded-2xl bg-white shadow-2xl">
                 <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
-                  <div className="text-sm font-semibold text-slate-900"> </div>
+                  <div className="text-sm font-semibold text-slate-900">Join our mailing list</div>
                   <button
                     type="button"
                     onClick={() => setIsMailchimpOpen(false)}
@@ -130,11 +130,74 @@ export function HomePage() {
                     ×
                   </button>
                 </div>
-                <iframe
-                  title="Mailchimp signup"
-                  src="http://eepurl.com/jC9VmA"
-                  className="h-[75vh] w-full"
-                />
+                <div className="max-h-[75vh] overflow-auto p-5">
+                  <p className="text-sm text-slate-600">
+                    Enter your details below to join the Globcal Properties mailing list.
+                  </p>
+
+                  <form
+                    action="https://globcalproperties.us8.list-manage.com/subscribe/post"
+                    method="POST"
+                    target="_blank"
+                    noValidate
+                    className="mt-4 grid gap-3"
+                  >
+                    <input type="hidden" name="u" value="fdd68430ee4c1e6cc83e6d304" />
+                    <input type="hidden" name="id" value="35cf5cd1fd" />
+
+                    <label className="grid gap-1 text-left">
+                      <span className="text-xs font-semibold text-slate-700">Email address *</span>
+                      <input
+                        name="EMAIL"
+                        type="email"
+                        required
+                        placeholder="you@example.com"
+                        className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                        autoComplete="email"
+                      />
+                    </label>
+
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <label className="grid gap-1 text-left">
+                        <span className="text-xs font-semibold text-slate-700">First name</span>
+                        <input
+                          name="FNAME"
+                          type="text"
+                          placeholder="First name"
+                          className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                          autoComplete="given-name"
+                        />
+                      </label>
+                      <label className="grid gap-1 text-left">
+                        <span className="text-xs font-semibold text-slate-700">Last name</span>
+                        <input
+                          name="LNAME"
+                          type="text"
+                          placeholder="Last name"
+                          className="h-11 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20"
+                          autoComplete="family-name"
+                        />
+                      </label>
+                    </div>
+
+                    <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                      <button
+                        type="submit"
+                        className="inline-flex h-11 items-center justify-center rounded-xl bg-emerald-600 px-5 text-sm font-semibold text-white transition hover:bg-emerald-700"
+                      >
+                        Subscribe
+                      </button>
+                      <a
+                        href="https://eepurl.com/jC9VmA"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-sm font-semibold text-slate-700 underline decoration-slate-300 underline-offset-4 hover:text-slate-900"
+                      >
+                        Open in new tab
+                      </a>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
           ) : null}
