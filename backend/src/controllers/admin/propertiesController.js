@@ -14,6 +14,7 @@ export async function createProperty(req, res) {
     investmentAmount,
     tenancyDetails,
     details,
+    highlights,
     status = 'Available',
     sellerId,
   } = req.body;
@@ -31,6 +32,12 @@ export async function createProperty(req, res) {
     investmentAmount: Number(investmentAmount),
     tenancyDetails: tenancyDetails != null ? String(tenancyDetails).trim() : undefined,
     details: details != null ? String(details).trim() || undefined : undefined,
+    highlights: Array.isArray(highlights)
+      ? highlights
+          .map((x) => (x == null ? '' : String(x).trim()))
+          .filter(Boolean)
+          .slice(0, 10)
+      : [],
     status: status === 'UnderOffer' || status === 'Sold' ? status : 'Available',
   };
   if (sellerId !== undefined && sellerId !== null && sellerId !== '') payload.seller = sellerId;
@@ -78,6 +85,7 @@ export async function updateProperty(req, res) {
     investmentAmount,
     tenancyDetails,
     details,
+    highlights,
     status,
     sellerId,
   } = req.body;
@@ -91,6 +99,14 @@ export async function updateProperty(req, res) {
   if (investmentAmount !== undefined) data.investmentAmount = Number(investmentAmount);
   if (tenancyDetails !== undefined) data.tenancyDetails = tenancyDetails == null ? null : String(tenancyDetails).trim();
   if (details !== undefined) data.details = details == null ? null : String(details).trim();
+  if (highlights !== undefined) {
+    data.highlights = Array.isArray(highlights)
+      ? highlights
+          .map((x) => (x == null ? '' : String(x).trim()))
+          .filter(Boolean)
+          .slice(0, 10)
+      : [];
+  }
   if (status !== undefined) data.status = status;
   if (sellerId !== undefined) data.seller = sellerId === null || sellerId === '' ? null : sellerId;
 

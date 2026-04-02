@@ -38,6 +38,25 @@ function EmptyState({ title, subtitle }) {
 }
 
 export function AdminPropertiesPage() {
+  const HIGHLIGHT_OPTIONS = [
+    '🏡 R2SA',
+    '🏡 Residential',
+    '🏢 Commercial',
+    '🏠 HMO',
+    '🛏 Studio',
+    '🛏 1 bed',
+    '🛏 2 bed',
+    '🛏 3 bed',
+    '🛏 4+ bed',
+    '🛁 1 bathroom',
+    '🛁 2 bathroom',
+    '🛗 Lift',
+    '🚗 Parking',
+    '🌳 Garden',
+    '🏙 City centre',
+    '🚇 Near station',
+  ]
+
   const [properties, setProperties] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -53,6 +72,8 @@ export function AdminPropertiesPage() {
     roi: '',
     tenancyDetails: '',
     details: '',
+    highlights: [],
+    customHighlight: '',
     status: 'Available',
     sellerId: '',
   })
@@ -143,6 +164,10 @@ export function AdminPropertiesPage() {
       const detailsTrimmed = createForm.details && createForm.details.trim()
       const hasDetailsText = detailsTrimmed && detailsTrimmed.replace(/<[^>]*>/g, '').trim()
       body.details = hasDetailsText ? detailsTrimmed : ''
+      body.highlights = (Array.isArray(createForm.highlights) ? createForm.highlights : [])
+        .map((x) => (x == null ? '' : String(x).trim()))
+        .filter(Boolean)
+        .slice(0, 10)
 
       let propertyId = editingId
       if (editingId) {
@@ -168,6 +193,8 @@ export function AdminPropertiesPage() {
         roi: '',
         tenancyDetails: '',
         details: '',
+        highlights: [],
+        customHighlight: '',
         status: 'Available',
         sellerId: '',
       })
@@ -278,6 +305,8 @@ export function AdminPropertiesPage() {
                       roi: '',
                       tenancyDetails: '',
                       details: '',
+                      highlights: [],
+                      customHighlight: '',
                       status: 'Available',
                       sellerId: '',
                     })
@@ -313,6 +342,8 @@ export function AdminPropertiesPage() {
                     roi: '',
                     tenancyDetails: '',
                     details: '',
+                    highlights: [],
+                    customHighlight: '',
                     status: 'Available',
                     sellerId: '',
                   })
@@ -416,6 +447,70 @@ export function AdminPropertiesPage() {
             value={createForm.tenancyDetails}
             onChange={(e) => setCreateForm((f) => ({ ...f, tenancyDetails: e.target.value }))}
           />
+          <div className="space-y-2">
+            <div className="text-sm font-medium text-slate-800">Highlights (optional)</div>
+            <div className="flex flex-wrap gap-2">
+              {HIGHLIGHT_OPTIONS.map((opt) => {
+                const selected = Array.isArray(createForm.highlights) && createForm.highlights.includes(opt)
+                return (
+                  <button
+                    key={opt}
+                    type="button"
+                    onClick={() => {
+                      setCreateForm((f) => {
+                        const curr = Array.isArray(f.highlights) ? f.highlights : []
+                        const next = selected ? curr.filter((x) => x !== opt) : [...curr, opt]
+                        return { ...f, highlights: next.slice(0, 10) }
+                      })
+                    }}
+                    className={`rounded-full px-3 py-1 text-xs font-semibold ring-1 transition ${
+                      selected
+                        ? 'bg-emerald-600 text-white ring-emerald-600'
+                        : 'bg-white text-slate-700 ring-slate-200 hover:bg-slate-50'
+                    }`}
+                  >
+                    {opt}
+                  </button>
+                )
+              })}
+            </div>
+
+            <div className="grid gap-2 sm:grid-cols-[1fr_auto]">
+              <Input
+                label="Add custom highlight"
+                value={createForm.customHighlight}
+                onChange={(e) => setCreateForm((f) => ({ ...f, customHighlight: e.target.value }))}
+                placeholder="e.g. 🧾 Bills included"
+              />
+              <Button
+                type="button"
+                variant="secondary"
+                className="sm:mt-6"
+                onClick={() => {
+                  setCreateForm((f) => {
+                    const raw = String(f.customHighlight || '').trim()
+                    if (!raw) return f
+                    const curr = Array.isArray(f.highlights) ? f.highlights : []
+                    if (curr.includes(raw)) return { ...f, customHighlight: '' }
+                    return { ...f, highlights: [...curr, raw].slice(0, 10), customHighlight: '' }
+                  })
+                }}
+              >
+                Add
+              </Button>
+            </div>
+
+            {Array.isArray(createForm.highlights) && createForm.highlights.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {createForm.highlights.slice(0, 10).map((h) => (
+                  <span key={h} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+                    {h}
+                  </span>
+                ))}
+              </div>
+            ) : null}
+            <div className="text-xs text-slate-500">You can select multiple (max 10).</div>
+          </div>
           <RichTextEditor
             label="Details (optional)"
             placeholder="Describe the property, features, area info, etc. Shown below title and location on the property page."
@@ -657,6 +752,8 @@ export function AdminPropertiesPage() {
                               roi: p?.roi != null && !Number.isNaN(Number(p.roi)) ? String(p.roi) : '',
                               tenancyDetails: p?.tenancyDetails || '',
                               details: p?.details || '',
+                              highlights: Array.isArray(p?.highlights) ? p.highlights : [],
+                              customHighlight: '',
                               status: p?.status || 'Available',
                               sellerId: p?.seller?.id || p?.seller?._id || p?.seller || '',
                             })

@@ -149,7 +149,7 @@ function OpportunityCard({ property }) {
         ) : null}
         <div className="pointer-events-none absolute inset-0 rounded-[26px] ring-1 ring-black/5" />
         <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center justify-center px-4 py-1 text-[0.68rem] font-semibold tracking-[0.18em] text-emerald-50">
-          <img src={logo} alt="   " />
+          <img src={logo} alt="" className="h-9 w-auto opacity-90 sm:h-10" />
         </div>
       </div>
 
@@ -190,12 +190,17 @@ function OpportunityCard({ property }) {
         </div>
         <div className="mt-1 text-[0.8rem] font-semibold text-emerald-700">ROI: {roi}</div>
 
-        <div className="mt-3 flex flex-wrap items-center gap-3 text-[0.72rem] text-slate-600">
-          <span>🏡 R2SA</span>
-          <span>🛏 2–4 bed</span>
-          <span>🛁 1–2 bathroom</span>
-          <span>🛗 Lift / parking</span>
-        </div>
+        {Array.isArray(property?.highlights) && property.highlights.filter(Boolean).length > 0 ? (
+          <div className="mt-3 flex flex-wrap items-center gap-3 text-[0.72rem] text-slate-600">
+            {property.highlights
+              .map((x) => (x == null ? '' : String(x).trim()))
+              .filter(Boolean)
+              .slice(0, 10)
+              .map((h) => (
+                <span key={h}>{h}</span>
+              ))}
+          </div>
+        ) : null}
       </div>
  
     </Card>
@@ -266,7 +271,7 @@ export function FeaturedOpportunity({ featured = [], loading, loadError }) {
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight text-slate-900">Featured Opportunities</h2>
           <p className="mt-2 text-sm text-slate-700">
-            Buying Property or Rent Property for Business, Deals are sold on a first come, first served basis
+            Whether you’re buying or renting a property for business, you can find a deal here that suits you. Deals go quickly and are offered on a first-come, first-served basis.
           </p>
         </div>
 

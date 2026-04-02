@@ -24,6 +24,7 @@ const propertySchema = new mongoose.Schema(
     investmentAmount: { type: Number, required: true },
     tenancyDetails: String,
     details: String,
+    highlights: { type: [String], default: [] },
     status: { type: String, default: 'Available' },
     statusRank: { type: Number, default: 0, index: true },
     soldAt: Date,

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/logo.jpeg";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -13,8 +13,8 @@ export function Footer() {
   ];
 
   const productTypes = [
-    ['Buy To Let Single', 'Buy To Let HMO', 'Buy To Let SA', 'FLIP', 'BRRR', 'R2SA'],
-    ['R2HMO', 'Buy To Let Double', 'Buy To Let HMO', 'Buy To Let SA', 'FLIP', 'BRRR']
+    ['Buy To Let Single', 'Buy To Let HMO', 'Buy To Let SA', 'FLIP', 'BRRR', ],
+    [ 'R2RHMO', 'R2RSA', 'Buy To Let HMO', 'Buy To Let SA', 'FLIP', 'BRRR']
   ];
 
   const footerLinks = [

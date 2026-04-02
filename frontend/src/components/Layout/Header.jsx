@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/logo.jpeg";
 import { useState } from "react";
 
 export function Header({ variant = "dark" }) {
@@ -13,11 +13,7 @@ export function Header({ variant = "dark" }) {
 
   return (
     <header
-      className={`sticky top-0 z-40 w-full border-b backdrop-blur-md ${
-        isDark
-          ? "border-white/10 bg-slate-950/80"
-          : "border-slate-200 bg-white/90"
-      }`}
+      className={`sticky top-0 z-40 w-full border-b backdrop-blur-md  bg-slate-900 `}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
 
