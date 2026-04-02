@@ -10,6 +10,15 @@ export function HomePage() {
   const [featured, setFeatured] = useState([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(null)
+  const [isMailchimpOpen, setIsMailchimpOpen] = useState(false)
+
+  useEffect(() => {
+    const t = window.setTimeout(() => {
+      setIsMailchimpOpen(true)
+    }, 5000)
+
+    return () => window.clearTimeout(t)
+  }, [])
 
   useEffect(() => {
     let alive = true
@@ -76,20 +85,59 @@ export function HomePage() {
                   <span className="text-xs font-medium tracking-wider text-white/90">PREMIUM PROPERTY PARTNER</span>
                 </div>
  
-                <h1 className="animate-[fadeIn_0.8s_ease-out] text-4xl font-light tracking-tight text-white sm:text-5xl lg:text-7xl">
-                  <span className="block font-bold">Discover Your Next</span>
+                <h1 className="animate-[fadeIn_0.8s_ease-out] text-4xl font-light tracking-tight text-white sm:text-4xl lg:text-6xl">
+                  <span className="block font-bold">Explore the latest property deals with us in</span>
                   <span className="mt-2 block bg-gradient-to-r from-emerald-300 via-white to-emerald-300 bg-clip-text text-transparent">
-                    Investment Property
+                  The United Kingdom and Great Britain
                   </span>
                 </h1> 
                 <p className="mx-auto mt-6 max-w-2xl animate-[fadeIn_1s_ease-out] text-lg text-white/80">
-                  England, Scotland, Wales & Northern Ireland
+                England, Scotland, and Wales Plus Northern Ireland
+
                 </p>
  
-                
+                <div className="mt-8" />
               </div>
             </div>
           </div>
+
+          {isMailchimpOpen ? (
+            <div
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Mailchimp signup"
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') setIsMailchimpOpen(false)
+              }}
+              tabIndex={-1}
+            >
+              <button
+                type="button"
+                aria-label="Close"
+                className="absolute inset-0 cursor-default bg-black/70"
+                onClick={() => setIsMailchimpOpen(false)}
+              />
+              <div className="relative z-10 w-full max-w-xl overflow-hidden rounded-2xl bg-white shadow-2xl">
+                <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
+                  <div className="text-sm font-semibold text-slate-900"> </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsMailchimpOpen(false)}
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-full text-slate-700 hover:bg-slate-100"
+                    aria-label="Close popup"
+                  >
+                    ×
+                  </button>
+                </div>
+                <iframe
+                  title="Mailchimp signup"
+                  src="http://eepurl.com/jC9VmA"
+                  className="h-[75vh] w-full"
+                />
+              </div>
+            </div>
+          ) : null}
         </section> 
         <FeaturedOpportunity featured={featured} loading={loading} loadError={loadError} />
  
@@ -108,7 +156,7 @@ export function HomePage() {
                     <span className="font-bold text-emerald-600">Investors Club</span>
                   </h2>
                   <p className="mt-2 text-slate-600">
-                    Be the first to receive weekly updates on new opportunities
+                  Be the first to receive weekly updates: join the investors club. 
                   </p>
                 </div>
                 <Link
@@ -134,13 +182,15 @@ export function HomePage() {
                   <span className="text-xs font-semibold tracking-wider text-emerald-700">PERSONALIZED SERVICE</span>
                 </div>
                 
-                <h2 className="text-4xl font-light leading-tight text-slate-900 lg:text-5xl">
-                  Find Your Perfect{' '}
-                  <span className="font-bold text-emerald-600">Investment Property</span>
+                <h2 className="text-2xl font-light leading-tight text-slate-900 lg:text-3xl">
+                Find the Right Investment Property
+
+{' '}
+                  <span className="font-bold text-emerald-600">Through Our Requirement Request Service</span>
                 </h2>
                 
                 <p className="text-lg text-slate-600">
-                  Tell us what you're looking for, and we'll find properties that match your exact criteria.
+                For an interim fee we can start! Complete the form and tell us what you are looking for and where
                 </p>
 
                 <div className="grid grid-cols-2 gap-4 pt-6">

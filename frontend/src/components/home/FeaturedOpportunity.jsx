@@ -271,7 +271,7 @@ export function FeaturedOpportunity({ featured = [], loading, loadError }) {
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight text-slate-900">Featured Opportunities</h2>
           <p className="mt-2 text-sm text-slate-700">
-            Whether you’re buying or renting a property for business, you can find a deal here that suits you. Deals go quickly and are offered on a first-come, first-served basis.
+          Buying Property or Rent Property for Business, Deals are sold on a first come, first served basis
           </p>
         </div>
 
