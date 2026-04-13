@@ -7,12 +7,14 @@ import properties from './routes/properties.js';
 import deals from './routes/deals.js';
 import refunds from './routes/refunds.js';
 import generalQueries from './routes/generalQueries.js';
+import investorsLounge from './routes/investorsLounge.js';
 import adminAuth from './routes/admin/auth.js';
 import adminInquiries from './routes/admin/inquiries.js';
 import adminProperties from './routes/admin/properties.js';
 import adminDeals from './routes/admin/deals.js';
 import adminRefunds from './routes/admin/refunds.js';
 import adminGeneralQueries from './routes/admin/generalQueries.js';
+import adminInvestorsLounge from './routes/admin/investorsLounge.js';
 import adminSellers from './routes/admin/sellers.js';
 import sellers from './routes/sellers.js';
 import { runFourteenDayCron } from './jobs/fourteenDayCron.js';
@@ -43,6 +45,7 @@ app.use('/api/properties', properties);
 app.use('/api/deals', deals);
 app.use('/api/refunds', refunds);
 app.use('/api/general-queries', generalQueries);
+app.use('/api/investors-lounge', investorsLounge);
 app.use('/api/sellers', sellers);
 
 // Admin API
@@ -52,6 +55,7 @@ app.use('/api/admin/properties', adminProperties);
 app.use('/api/admin/deals', adminDeals);
 app.use('/api/admin/refunds', adminRefunds);
 app.use('/api/admin/general-queries', adminGeneralQueries);
+app.use('/api/admin/investors-lounge', adminInvestorsLounge);
 app.use('/api/admin/sellers', adminSellers);
 
 app.get('/api/health', (req, res) => res.json({ ok: true }));

@@ -107,6 +107,11 @@ export function createGeneralQuery(body) {
   return request('POST', '/api/general-queries', { body });
 }
 
+/** POST /api/investors-lounge — homepage popup submissions */
+export function createInvestorsLoungeSubmission(body) {
+  return request('POST', '/api/investors-lounge', { body })
+}
+
 // —— Admin Auth ——
 
 /** POST /api/admin/login — { email, password } → { token, admin } */
@@ -263,6 +268,12 @@ export function getAdminInquiries(params = {}) {
 export function getAdminGeneralQueries(params = {}) {
   const q = new URLSearchParams(params).toString();
   return request('GET', `/api/admin/general-queries${q ? `?${q}` : ''}`);
+}
+
+/** GET /api/admin/investors-lounge */
+export function getAdminInvestorsLounge(params = {}) {
+  const q = new URLSearchParams(params).toString()
+  return request('GET', `/api/admin/investors-lounge${q ? `?${q}` : ''}`)
 }
 
 // —— Health (optional) ——

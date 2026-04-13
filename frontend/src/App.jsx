@@ -10,6 +10,7 @@ import { AdminDealsPage } from './pages/admin/AdminDealsPage'
 import { AdminInquiriesPage } from './pages/admin/AdminInquiriesPage'
 import { AdminRefundsPage } from './pages/admin/AdminRefundsPage'
 import { AdminGeneralQueriesPage } from './pages/admin/AdminGeneralQueriesPage'
+import { AdminInvestorsLoungePage } from './pages/admin/AdminInvestorsLoungePage'
 import { AboutPage } from './pages/AboutPage'
 import { GettingStartedPage } from './pages/GettingStartedPage'
 import { PropertyDetailsPage } from './pages/PropertyDetailsPage'
@@ -17,6 +18,10 @@ import { SellerProfilePage } from './pages/SellerProfilePage'
 import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage'
 import { DealSourceTermsPage } from './pages/DealSourceTermsPage'
 import { RefundPage } from './pages/RefundPage'
+import { BuyerTermsPage } from './pages/BuyerTermsPage'
+import { PropertyConnectPage } from './pages/PropertyConnectPage'
+import { BespokePropertyConnectPage } from './pages/BespokePropertyConnectPage'
+import { SellerTermsPage } from './pages/SellerTermsPage'
 
 function App() {
   return (
@@ -27,8 +32,12 @@ function App() {
       <Route path="/properties/:id" element={<PropertyDetailsPage />} />
       <Route path="/sellers/:id" element={<SellerProfilePage />} />
       <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+      <Route path="/buyer-terms" element={<BuyerTermsPage />} />
+      <Route path="/seller-terms" element={<SellerTermsPage />} />
+      <Route path="/bespoke-property-connect" element={<BespokePropertyConnectPage />} />
+      <Route path="/property-connect" element={<PropertyConnectPage />} />
       <Route path="/deal-source-terms" element={<DealSourceTermsPage />} />
-      <Route path="/refund" element={<RefundPage />} />
+      <Route path="/refunds" element={<RefundPage />} />
       <Route
         path="/admin"
         element={
@@ -95,6 +104,16 @@ function App() {
           <RequireAdmin>
             <AdminLayout>
               <AdminGeneralQueriesPage />
+            </AdminLayout>
+          </RequireAdmin>
+        }
+      />
+      <Route
+        path="/admin/investors-lounge"
+        element={
+          <RequireAdmin>
+            <AdminLayout>
+              <AdminInvestorsLoungePage />
             </AdminLayout>
           </RequireAdmin>
         }

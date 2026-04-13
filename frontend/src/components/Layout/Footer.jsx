@@ -18,7 +18,14 @@ export function Footer() {
   ];
 
   const footerLinks = [
-    'Home', 'About us', 'Getting started', 'Privacy Policy', 'Deal Source Terms', 'Refund'
+    'Home',
+    'About us',
+    'Bespoke Property Connect',
+    'Buyer Terms',
+    'Seller Terms',
+    'Privacy Policy',
+    'Property Connect',
+    'Refunds'
   ];
 
   return (
@@ -52,15 +59,21 @@ export function Footer() {
         </div> 
         <div className="flex flex-col items-center gap-8 border-b border-slate-800 py-12 md:flex-row md:justify-between">
  
-          <nav className="flex flex-wrap justify-center gap-6 text-sm">
-            {footerLinks.map((link) => (
-              <Link
-                key={link}
-                to={`/${link.toLowerCase().replace(/\s+/g, '-')}`}
-                className="text-slate-400 transition-colors hover:text-emerald-400"
-              >
-                {link}
-              </Link>
+          <nav className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm">
+            {footerLinks.map((link, idx) => (
+              <span key={link} className="inline-flex items-center gap-x-3">
+                <Link
+                  to={`/${link.toLowerCase().replace(/\s+/g, '-')}`}
+                  className="text-slate-400 transition-colors hover:text-emerald-400"
+                >
+                  {link}
+                </Link>
+                {idx < footerLinks.length - 1 ? (
+                  <span aria-hidden="true" className="text-slate-600">
+                    |
+                  </span>
+                ) : null}
+              </span>
             ))}
           </nav> 
           <div className="flex gap-3">

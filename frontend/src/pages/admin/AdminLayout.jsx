@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { path: '/admin/inquiries', label: 'Inquiries' },
   { path: '/admin/refunds', label: 'Refunds' },
   { path: '/admin/general-queries', label: 'General queries' },
+  { path: '/admin/investors-lounge', label: 'Investors Lounge' },
 ]
 
 function NavButton({ to, active, children }) {
