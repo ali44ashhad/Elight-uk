@@ -451,14 +451,21 @@ export function HomePage() {
             </div>
           </div>
         </section> 
-        <section className="border-y border-slate-200 bg-white py-16">
+        <section className="border-y flex  items-center justify-center border-slate-200 bg-white py-16">
+          
           <div className="mx-auto max-w-6xl px-4">
+          <h2 className="text-xl space-y-6 pb-10 font-light   text-slate-900  ">
+          Working alongside Globcal Properties, our partners, and our investors, 
+{' '}
+                  <span className="font-bold text-emerald-600">we are collectively focused on achieving the following benchmarks over the next five years.
+                  </span>
+                </h2>
             <div className="grid grid-cols-2 gap-8 text-center md:grid-cols-4">
               {[
                 { label: 'Properties', end: 500, suffix: '+' },
                 { label: 'Investors', end: 2500, suffix: '+' },
                 { label: 'Cities', end: 25, suffix: '+' },
-                { label: 'ROI', end: 12, suffix: '%' },
+                { label: 'ROI', end: 9, suffix: '%+' },
               ].map((stat) => (
                 <div key={stat.label} className="space-y-2">
                   <div className="text-3xl font-bold text-slate-900 lg:text-4xl">
@@ -474,7 +481,7 @@ export function HomePage() {
 
       {investorsLoungeOpen ? (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-10"
+          className="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-black/70 px-4 py-6 sm:items-center sm:py-10"
           onMouseDown={(e) => {
             if (e.target === e.currentTarget) setInvestorsLoungeOpen(false)
           }}
@@ -485,8 +492,10 @@ export function HomePage() {
             aria-label="The Armchair Investors Lounge"
             className="w-full max-w-6xl overflow-hidden rounded-2xl bg-slate-900 shadow-2xl ring-1 ring-white/10"
           >
-            <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
-              <div className="text-lg font-bold tracking-tight text-emerald-500">The Armchair Investors Lounge</div>
+            <div className="flex items-center justify-between border-b border-white/10 px-4 py-4 sm:px-6">
+              <div className="text-base font-bold tracking-tight text-emerald-500 sm:text-lg">
+                The Armchair Investors Lounge
+              </div>
               <button
                 type="button"
                 onClick={() => setInvestorsLoungeOpen(false)}
@@ -496,7 +505,8 @@ export function HomePage() {
               </button>
             </div>
 
-            <div className="grid gap-8 px-6 py-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+            <div className="max-h-[80vh] overflow-y-auto px-4 py-5 sm:max-h-[85vh] sm:px-6 sm:py-6">
+              <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:gap-8">
               <div className="min-w-0 space-y-6">
                 <p className="text-sm leading-relaxed text-slate-200">
                   As an armchair investor, you take a completely hands-off approach, providing capital for property
@@ -509,7 +519,7 @@ export function HomePage() {
                   involvement.
                 </p>
 
-                <div className="text-3xl font-light leading-tight text-white sm:text-4xl">
+                <div className="text-2xl font-light leading-tight text-white sm:text-3xl lg:text-4xl">
                   Start your armchair investors journey today. Let us do all the work while you reap the rewards.
                 </div>
               </div>
@@ -592,6 +602,7 @@ export function HomePage() {
                   </button>
                 </div>
               </form>
+              </div>
             </div>
           </div>
         </div>
