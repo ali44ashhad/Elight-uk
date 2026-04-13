@@ -11,8 +11,8 @@ const PROPERTY_TYPES = [
   'Buy To Let SA',
   'Flip Single',
   'BRRR',
-  'Rent 2 SA',
-  'Rent 2 HMO',
+  'Rent 2 Rent',
+  'Rent 2 Home',
 ]
 
 const PROPERTY_STYLES = ['Studio', 'Detached', 'Semi Detached', 'Terrace', 'Apartment', 'Maisonette']

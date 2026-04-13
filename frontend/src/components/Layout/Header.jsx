@@ -45,7 +45,7 @@ export function Header({ variant = "dark" }) {
           {/* Desktop Button */}
           <div className="hidden md:block">
             <Link
-              to="/getting-started"
+              to=""
               className={`rounded-full px-6 py-2 text-sm font-semibold transition ${
                 isDark
                   ? "border border-white/20 bg-white/10 text-white hover:bg-white/20"
@@ -93,7 +93,7 @@ export function Header({ variant = "dark" }) {
 
             {/* Mobile Getting Started Button */}
             <Link
-              to="/getting-started"
+              to=""
               onClick={() => setIsOpen(false)}
               className="mt-2 rounded-full px-5 py-2 text-center text-sm font-semibold bg-slate-900 text-white hover:bg-slate-800"
             >
