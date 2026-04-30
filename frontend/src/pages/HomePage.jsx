@@ -472,8 +472,8 @@ export function HomePage() {
                 </h2>
             <div className="grid grid-cols-2 gap-8 text-center md:grid-cols-4">
               {[
-                { label: 'Properties', end: 500, suffix: '+' },
-                { label: 'Investors', end: 2500, suffix: '+' },
+                { label: 'Properties', end: 2400, suffix: '+' },
+                { label: 'Investors', end: 500, suffix: '+' },
                 { label: 'Cities', end: 25, suffix: '+' },
                 { label: 'ROI', end: 9, suffix: '%+' },
               ].map((stat) => (
