@@ -8,7 +8,7 @@ export function BespokePropertyConnectPage() {
 
       <main className="mx-auto max-w-5xl px-4 py-10 space-y-8">
         <section>
-          <h1 className="text-3xl font-black tracking-tight text-teal-900">Bespoke Property Connect Agreement</h1>
+          <h1 className="text-3xl font-black tracking-tight text-teal-900">Bespoke Globcal Properties Agreement</h1>
           <p className="mt-2 text-sm font-semibold text-teal-900">(Business to Business)</p>
         </section>
 
@@ -18,9 +18,14 @@ export function BespokePropertyConnectPage() {
             <div className="mt-2 space-y-2">
               <div className="space-y-1">
                 <p>Introducer:</p>
-                <p>Globcal Properties Limited, trading as Globcal Property Connect</p>
-                <p>(Company Number: XXXXXXX)</p>
-                <p>Registered Office: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
+                <p>
+                  Adamas Aureum Deal Sourcing Ltd, trading as Globcal Properties{'  '}
+                  (Company Number: 17174020)
+                </p>
+                <p>
+                  Registered Office: 2nd Floor College House, 17 King Edwards Road, Ruislip, London, United Kingdom,
+                  HA4 7AE
+                </p>
               </div>
               <div className="space-y-1">
                 <p>Investor:</p>

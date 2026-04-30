@@ -324,15 +324,26 @@ export function HomePage() {
                   Be the first to receive weekly updates: join the investors club. 
                   </p>
                 </div>
-                <Link
-                  to="/getting-started"
+                <button
+                  type="button"
+                  onClick={() => setIsMailchimpOpen(true)}
                   className="group relative inline-flex items-center gap-2 rounded-full bg-slate-900 px-8 py-4 text-white transition-all hover:bg-slate-800"
                 >
-                  <span className="font-medium">Get Started</span>
-                  <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  <span className="font-medium">Investor Club</span>
+                  <svg
+                    className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17 8l4 4m0 0l-4 4m4-4H3"
+                    />
                   </svg>
-                </Link>
+                </button>
               </div>
             </div>
 
@@ -343,8 +354,7 @@ export function HomePage() {
                     Register for our Armchair <span className="font-bold text-emerald-600">Investors Lounge</span>
                   </h2>
                   <p className="mt-2 text-slate-600">
-                    Perfect for cash rich, time poor, and a passive income approach appetite
-                  </p>
+                  Perfect for cash rich, time poor, and a passive income approach.                   </p>
                 </div>
                 <button
                   type="button"
@@ -367,7 +377,7 @@ export function HomePage() {
               <div className="space-y-6">
                 <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2">
                   <span className="flex h-2 w-2 rounded-full bg-emerald-500" />
-                  <span className="text-xs font-semibold tracking-wider text-emerald-700">PERSONALIZED SERVICE</span>
+                  <span className="text-xs font-semibold tracking-wider text-emerald-700">PERSONALISED SERVICE</span>
                 </div>
                 
                 <h2 className="text-2xl font-light leading-tight text-slate-900 lg:text-3xl">
@@ -378,7 +388,7 @@ export function HomePage() {
                 </h2>
                 
                 <p className="text-lg text-slate-600">
-                For an interim fee we can start! Complete the form and tell us what you are looking for and where
+                For an interim fee we can start! Complete the form and tell us what you are looking for and where.
                 </p>
 
                 <div className="grid grid-cols-2 gap-4 pt-6">
@@ -548,7 +558,7 @@ export function HomePage() {
 
                 <div className="pt-2">
                   <div className="text-sm font-semibold tracking-wide text-emerald-500">
-                    SELECT THE BEST TERMS THAT DESCRIBES YOU
+                  SELECT THE TERM(S) THAT BEST DESCRIBE YOUR POSITION: 
                   </div>
                   <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                     {[

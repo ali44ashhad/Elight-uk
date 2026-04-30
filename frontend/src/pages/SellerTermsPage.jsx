@@ -166,10 +166,11 @@ export function SellerTermsPage() {
             <div className="mt-2 space-y-2">
               <p>9.1 For the purposes of UK data protection legislation, the data controller is:</p>
               <div className="mt-2 space-y-1">
-                <p>Globcal Properties Ltd</p>
-                <p>(Trading as Globcal Property Connect)</p>
-                <p>Registered in England and Wales (Company No. XXXXXXXX)</p>
-                <p>Registered Office: 205 Regent Street, London, W1B 4HB</p>
+                <p>Adamas Aureum Deal Sourcing Ltd, trading as Globcal Properties (Company Number: 17174020)</p>
+                <p>
+                  Registered Office: 2nd Floor College House, 17 King Edwards Road, Ruislip, London, United Kingdom,
+                  HA4 7AE
+                </p>
               </div>
               <p>9.2 Personal data shall be processed in accordance with the Privacy Policy published on the Platform.</p>
               <p>9.3 Each party shall comply with UK GDPR and the Data Protection Act 2018.</p>

@@ -13,7 +13,7 @@ export function Footer() {
   ];
 
   const productTypes = [ 
-    [ 'Buy To Let Single','R2R', 'R2H', 'Buy To Let HMO', 'Buy To Let SA', 'FLIP', 'BRRR']
+    [ 'Buy To Let Single','R2RSA', 'R2RHMO', 'Buy To Let HMO', 'Buy To Let SA', 'FLIP', 'BRRR']
   ];
 
   const footerLinks = [
@@ -101,8 +101,7 @@ export function Footer() {
           </div>
 
           <p className="mx-auto max-w-3xl text-xs font-light leading-relaxed text-slate-400">
-            "Global Deal Sourcing" is a trading name of XXXXXXXXXXXXX. Registered in England and Wales No. 17011000. 
-            Registered Office: 4th Floor, 205 Regent Street London, W1B 4HB.
+          Globcal Properties is a trading name of Adamas Aureum Deal Sourcing Ltd Registered in England and Wales No.17174020. Registered Office: 2nd Floor College House, 17 King Edwards Road, Ruislip, London, United Kingdom, HA4 7AE.  Contact: dealsourcing@globcalproperties.co.uk ------------ 
           </p>
 
           <div className="mt-6 text-xs text-slate-500">

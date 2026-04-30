@@ -16,7 +16,7 @@ export function AboutPage() {
             <div className="max-w-3xl">
               <div className="mb-5 inline-flex items-center rounded-full border border-white/20 bg-white/5 px-4 py-1.5 backdrop-blur-sm">
                 <span className="mr-2 flex h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
-                <span className="text-xs font-medium tracking-wider text-white/90">ABOUT GLOBAL DEAL SOURCING</span>
+                <span className="text-xs font-medium tracking-wider text-white/90">ABOUT GLOBCAL PROPERTIES DEAL SOURCING </span>
               </div>
               <h1 className="text-4xl font-light tracking-tight text-white sm:text-5xl">
                 <span className="block font-bold">Managing Director’s Message</span>
@@ -25,8 +25,7 @@ export function AboutPage() {
                 </span>
               </h1>
               <p className="mt-4 max-w-2xl text-base text-white/80">
-                UK property investment opportunities — carefully analysed, transparent, and investment ready.
-              </p>
+              To source selective UK property investment opportunities that are analysed, transparent, and investment-ready.               </p>
             </div>
           </div>
         </div>
@@ -38,26 +37,22 @@ export function AboutPage() {
           <div>
             <h2 className="text-3xl font-black tracking-tight text-slate-900">Managing Director’s Message</h2>
             <p className="mt-3 text-[17px] leading-relaxed text-slate-700">
-              Globcal Deal Sourcing is probably one of the fastest growing and most reputable commercial and residential
-              deal sourcing firms in the United Kingdom. Our highly skilled deal-sourcing team specialise in identifying
-              and delivering high quality property investment opportunities, from Buy To Let, HMO and Serviced
-              Accommodation properties to Buy, Refurbish, Rent (BRRR) developments.
-            </p>
+            Globcal Properties is probably one of the fastest-growing and most reputable commercial and residential deal sourcing firms in the United Kingdom. Our highly skilled deal-sourcing team specialises in identifying and delivering high-quality property investment opportunities, from Buy-To-Lets, HMOs, and Serviced Accommodations to BRRR’s (Buy, Refurbish, Refinance, Rent) developments. </p>
             <p className="mt-3 text-[17px] leading-relaxed text-slate-700">
-              As experienced deal sourcers, we understand how unpredictable and competitive the UK property market can be.
-              That’s why we continually work to stay ahead of market trends, maintain strong industry relationships, and
-              uncover off-market and high-yield opportunities before they reach the open market.
-            </p>
+            As experienced deal sourcers, we understand how unpredictable and competitive the UK property market can be. That’s why we continually work to stay ahead of market trends, maintain strong industry relationships, and uncover off-market and high-yield opportunities before they reach the open market.</p>
            
           </div>
           
         </section>
         <p className="mt-8 text-[17px] font-semibold text-slate-900">Our mission is simple.</p>
         <p className="mt-3 text-[17px] leading-relaxed text-slate-700">
-              Our mission is simple: to provide investors with carefully analysed, high value, and stress-free property
-              deals that align with their investment goals. From initial sourcing and due diligence to negotiation support,
-              we ensure every deal we present is fully packaged, transparent, and investment ready.
-            </p>
+        It’s all about finding great property investment opportunities and connecting them with investors. We don’t buy the properties ourselves, instead, we step in as the middle point, hunting down below market value deals, strong rental performers, and projects with real potential to add value or develop further.  
+        
+        </p>
+        <p className="mt-3 text-[17px] leading-relaxed text-slate-700">
+        Our day-to-day work includes researching the market, spotting promising properties, negotiating favourable terms with owners or agents, and putting everything together into a clear, investor-friendly deal pack. Once an investor decides to move forward, we handle the handover of the opportunity. 
+        </p>
+
            
         {/* Our Team Members */}
         <section className="mt-12">

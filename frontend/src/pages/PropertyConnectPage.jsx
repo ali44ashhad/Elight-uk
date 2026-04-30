@@ -43,8 +43,9 @@ export function PropertyConnectPage() {
               <p>“Conditions” means these Deal Sourcing Terms and Conditions.</p>
               <p>“Information Sheet” means the property information supplied by the Owner and released to the User.</p>
               <p>
-                “Introducer” means Globcal Properties Ltd (trading as Globcal Property Connect), registered in England
-                and Wales (Company No. XXXXXXXX) with registered office at 205 Regent Street, London, W1B 4HB.
+                “Introducer” means Adamas Aureum Deal Sourcing Ltd (trading as Globcal Properties), registered in
+                England and Wales (Company No.17174020) with registered office at 2nd Floor College House, 17 King
+                Edwards Road, Ruislip, London, United Kingdom, HA4 7AE.
               </p>
               <p>
                 “Objection” means a written allegation of a material factual inconsistency between the Preview and the

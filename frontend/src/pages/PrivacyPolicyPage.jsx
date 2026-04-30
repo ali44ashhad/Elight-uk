@@ -27,17 +27,17 @@ export function PrivacyPolicyPage() {
             <h2 className="text-lg font-bold text-teal-900">2. Company and Data Controller Details</h2>
             <p className="mt-2">For the purposes of UK data protection legislation, the data controller is:</p>
             <div className="mt-2 space-y-1">
-              <p>Globcal Properties Ltd</p>
-              <p>(Trading as Globcal Property Connect)</p>
-              <p>Registered in England and Wales</p>
-              <p>Company Number: XXXXXXXX</p>
-              <p>Registered Office: 205 Regent Street, London, W1B 4HB</p>
+              <p>Adamas Aureum Deal Sourcing Ltd, trading as Globcal Properties  (Company Number: 17174020)</p>
+              <p>
+                Registered Office: 2nd Floor College House, 17 King Edwards Road, Ruislip, London, United Kingdom,
+                HA4 7AE
+              </p>
               <p>
                 “Globcal Properties” and “Globcal Property Connect” are trading names and not separate legal entities.
               </p>
               <p>
-                References in this Privacy Policy to “we”, “us”, or “our” refer solely to Globcal Properties Ltd, in
-                compliance with Companies Act 2006 disclosure requirements.
+                References in this Privacy Policy to “we”, “us”, or “our” refer solely to Adamas-Aureum Deal Sourcing
+                Ltd, in compliance with Companies Act 2006 disclosure requirements.
               </p>
             </div>
           </div>
@@ -162,10 +162,12 @@ export function PrivacyPolicyPage() {
             <h2 className="text-lg font-bold text-teal-900">13. Contact Information</h2>
             <p className="mt-2">For privacy related enquiries or to exercise your data rights, contact:</p>
             <div className="mt-2 space-y-1">
-              <p>Globcal Properties Ltd</p>
-              <p>205 Regent Street</p>
-              <p>London, W1B 4HB</p>
-              <p>Email: [insert privacy contact email]</p>
+              <p>Adamas Aureum Deal Sourcing Ltd, trading as Globcal Properties (Company Number: 17174020)</p>
+              <p>
+                Registered Office: 2nd Floor College House, 17 King Edwards Road, Ruislip, London, United Kingdom,
+                HA4 7AE
+              </p>
+              <p>Email: [privacy@glocalproperties.co.uk]</p>
             </div>
           </div>
 

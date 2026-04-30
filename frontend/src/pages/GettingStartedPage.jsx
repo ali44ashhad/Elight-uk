@@ -11,8 +11,8 @@ const PROPERTY_TYPES = [
   'Buy To Let SA',
   'Flip Single',
   'BRRR',
-  'Rent 2 Rent',
-  'Rent 2 Home',
+  'Rent 2 Rent SA',
+  'Rent 2 Rent HMO',
 ]
 
 const PROPERTY_STYLES = ['Studio', 'Detached', 'Semi Detached', 'Terrace', 'Apartment', 'Maisonette']
@@ -125,7 +125,7 @@ export function GettingStartedPage() {
             <div className="max-w-3xl">
               <div className="mb-5 inline-flex items-center rounded-full border border-white/20 bg-white/5 px-4 py-1.5 backdrop-blur-sm">
                 <span className="mr-2 flex h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
-                <span className="text-xs font-medium tracking-wider text-white/90">GETTING STARTED</span>
+                <span className="text-xs font-medium tracking-wider text-white/90">Find the Right Property</span>
               </div>
               <h1 className="text-4xl font-light tracking-tight text-white sm:text-5xl">
                 <span className="block font-bold">Investment Property Requirement</span>
@@ -438,10 +438,7 @@ export function GettingStartedPage() {
                   className="mt-0.5 h-3.5 w-3.5 border-slate-300 text-emerald-600 focus:ring-emerald-600"
                 />
                 <span className="max-w-xl leading-snug text-slate-700">
-                  I acknowledge that upon submitting this completed request form, an interim fee of £1,000 becomes payable
-                  upon acceptance of the IPRR. The remaining balance for deal sourcing will become payable prior to
-                  delivery of the deal, following a 14-day cooling-off period. All services are provided in accordance
-                  with the standard Deal Sourcing Terms and Conditions.
+                I acknowledge that upon submitting this completed request form, an interim holding fee of £597 becomes payable upon acceptance of the IPRR. The remaining balance for deal sourcing will become payable prior to delivery of the deal, following a 14-day cooling-off period. All services are provided in accordance with the standard Deal Sourcing Terms and Conditions. 
                 </span>
               </label>
 
@@ -458,7 +455,7 @@ export function GettingStartedPage() {
                 ) : null}
                 <Button
                   type="submit"
-                  disabled={submitting}
+                  disabled={submitting || !form.acceptTerms}
                   className="rounded-full bg-slate-900 px-6 py-2 text-xs font-semibold uppercase tracking-wide text-white hover:bg-slate-800 disabled:opacity-60"
                 >
                   {submitting ? 'Submitting…' : 'Submit'}
