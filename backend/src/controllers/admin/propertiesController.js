@@ -1,8 +1,24 @@
 import multer from 'multer';
 import { cloudinary } from '../../lib/cloudinary.js';
 import { Property } from '../../models/Property.js';
+import { Seller } from '../../models/Seller.js';
 import { parsePagination } from '../../utils/pagination.js';
 import { withId } from '../../utils/mapId.js';
+
+async function getOrCreateDefaultAdminSeller() {
+  const name = String(process.env.ADMIN_SELLER_NAME || 'Elite').trim() || 'Elite';
+  const imageUrl = String(process.env.ADMIN_SELLER_IMAGE_URL || '').trim();
+
+  const update = { name };
+  if (imageUrl) update.imageUrl = imageUrl;
+
+  const seller = await Seller.findOneAndUpdate({ name, user: null }, update, {
+    new: true,
+    upsert: true,
+    setDefaultsOnInsert: true,
+  });
+  return seller;
+}
 
 export async function createProperty(req, res) {
   const {
@@ -17,6 +33,7 @@ export async function createProperty(req, res) {
     highlights,
     status = 'Available',
     sellerId,
+    moderationStatus,
   } = req.body;
 
   if (!title || !location || monthlyRent == null || investmentAmount == null) {
@@ -39,9 +56,17 @@ export async function createProperty(req, res) {
           .slice(0, 10)
       : [],
     status: status === 'UnderOffer' || status === 'Sold' ? status : 'Available',
+    moderationStatus:
+      moderationStatus === 'pending' || moderationStatus === 'rejected' || moderationStatus === 'approved'
+        ? moderationStatus
+        : 'approved',
   };
-  if (sellerId !== undefined && sellerId !== null && sellerId !== '') payload.seller = sellerId;
-  else payload.seller = null;
+  if (sellerId !== undefined && sellerId !== null && sellerId !== '') {
+    payload.seller = sellerId;
+  } else {
+    const defaultSeller = await getOrCreateDefaultAdminSeller();
+    payload.seller = defaultSeller?._id || null;
+  }
 
   const property = await Property.create(payload);
   const populated = await Property.findById(property._id).populate('seller').lean();
@@ -50,7 +75,13 @@ export async function createProperty(req, res) {
 
 export async function listAdminProperties(req, res) {
   const pagination = parsePagination(req.query);
-  const base = Property.find().sort({ statusRank: 1, createdAt: -1 }).populate('seller');
+  const moderationStatus = req.query.moderationStatus ? String(req.query.moderationStatus) : '';
+  const filter =
+    moderationStatus === 'pending' || moderationStatus === 'approved' || moderationStatus === 'rejected'
+      ? { moderationStatus }
+      : {};
+
+  const base = Property.find(filter).sort({ statusRank: 1, createdAt: -1 }).populate('seller');
 
   if (!pagination) {
     const properties = await base.lean();
@@ -58,7 +89,7 @@ export async function listAdminProperties(req, res) {
   }
 
   const [total, data] = await Promise.all([
-    Property.countDocuments(),
+    Property.countDocuments(filter),
     base.skip(pagination.skip).limit(pagination.limit).lean(),
   ]);
 
@@ -88,6 +119,7 @@ export async function updateProperty(req, res) {
     highlights,
     status,
     sellerId,
+    moderationStatus,
   } = req.body;
 
   const data = {};
@@ -109,6 +141,7 @@ export async function updateProperty(req, res) {
   }
   if (status !== undefined) data.status = status;
   if (sellerId !== undefined) data.seller = sellerId === null || sellerId === '' ? null : sellerId;
+  if (moderationStatus !== undefined) data.moderationStatus = moderationStatus;
 
   const property = await Property.findByIdAndUpdate(id, data, { new: true, runValidators: true }).populate('seller');
   if (!property) return res.status(404).json({ error: 'Property not found' });

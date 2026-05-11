@@ -17,6 +17,9 @@ import adminGeneralQueries from './routes/admin/generalQueries.js';
 import adminInvestorsLounge from './routes/admin/investorsLounge.js';
 import adminSellers from './routes/admin/sellers.js';
 import sellers from './routes/sellers.js';
+import auth from './routes/auth.js';
+import provider from './routes/provider.js';
+import adminProviderApplications from './routes/admin/providerApplications.js';
 import { runFourteenDayCron } from './jobs/fourteenDayCron.js';
 
 const app = express();
@@ -40,6 +43,8 @@ app.use(
 app.use(express.json());
 
 // Public API
+app.use('/api/auth', auth);
+app.use('/api/provider', provider);
 app.use('/api/inquiries', inquiries);
 app.use('/api/properties', properties);
 app.use('/api/deals', deals);
@@ -57,6 +62,7 @@ app.use('/api/admin/refunds', adminRefunds);
 app.use('/api/admin/general-queries', adminGeneralQueries);
 app.use('/api/admin/investors-lounge', adminInvestorsLounge);
 app.use('/api/admin/sellers', adminSellers);
+app.use('/api/admin/provider-applications', adminProviderApplications);
 
 app.get('/api/health', (req, res) => res.json({ ok: true }));
 

@@ -40,7 +40,7 @@ function StatCard({ title, value, subtitle, to, loading, tone = 'slate' }) {
 
 export function AdminDashboardHome() {
   const [loading, setLoading] = useState(true)
-  const [counts, setCounts] = useState({ properties: 0, sellers: 0, deals: 0, inquiries: 0, refunds: 0 })
+  const [counts, setCounts] = useState({ properties: 0, deals: 0, inquiries: 0, refunds: 0 })
 
   const summary = useMemo(
     () => [
@@ -50,13 +50,6 @@ export function AdminDashboardHome() {
         to: '/admin/properties',
         tone: 'emerald',
         subtitle: 'Create, update and publish properties to the public site.',
-      },
-      {
-        key: 'sellers',
-        title: 'Sellers',
-        to: '/admin/sellers',
-        tone: 'slate',
-        subtitle: 'Create sellers and assign them to properties.',
       },
       {
         key: 'deals',
@@ -98,7 +91,6 @@ export function AdminDashboardHome() {
       try {
         const [p, s, d, i, r] = await Promise.allSettled([
           api.getAdminProperties({ page: 1, limit: 1 }),
-          api.getAdminSellers(),
           api.getAdminDeals({ page: 1, limit: 1 }),
           api.getAdminInquiries({ page: 1, limit: 1 }),
           request('GET', '/api/admin/refunds'),
@@ -107,7 +99,6 @@ export function AdminDashboardHome() {
         if (!alive) return
         setCounts({
           properties: p.status === 'fulfilled' ? getTotal(p.value) : 0,
-          sellers: s.status === 'fulfilled' ? getTotal(s.value) : 0,
           deals: d.status === 'fulfilled' ? getTotal(d.value) : 0,
           inquiries: i.status === 'fulfilled' ? getTotal(i.value) : 0,
           refunds: r.status === 'fulfilled' ? getTotal(r.value) : 0,
@@ -179,12 +170,6 @@ export function AdminDashboardHome() {
               className="rounded-xl bg-white px-3 py-2 text-sm font-semibold text-slate-800 ring-1 ring-slate-200 hover:bg-slate-50"
             >
               Manage deals
-            </Link>
-            <Link
-              to="/admin/sellers"
-              className="rounded-xl bg-white px-3 py-2 text-sm font-semibold text-slate-800 ring-1 ring-slate-200 hover:bg-slate-50"
-            >
-              Manage sellers
             </Link>
             <Link
               to="/admin/properties"

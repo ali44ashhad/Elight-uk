@@ -98,8 +98,7 @@ export function Footer() {
             <span className="text-xs font-medium text-slate-300">PIMS</span>
             <span className="h-4 w-px bg-slate-700" />
             <span className="text-xs text-slate-400">Registered</span>
-          </div>
-
+          </div> 
           <p className="mx-auto max-w-3xl text-xs font-light leading-relaxed text-slate-400">
           Globcal Properties is a trading name of Adamas Aureum Deal Sourcing Ltd Registered in England and Wales No.17174020. Registered Office: 2nd Floor College House, 17 King Edwards Road, Ruislip, London, United Kingdom, HA4 7AE.  Contact: dealsourcing@globcalproperties.co.uk. 
           </p>

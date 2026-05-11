@@ -25,6 +25,14 @@ const propertySchema = new mongoose.Schema(
     tenancyDetails: String,
     details: String,
     highlights: { type: [String], default: [] },
+    // Moderation is separate from business status (Available/UnderOffer/Sold).
+    moderationStatus: {
+      type: String,
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'approved',
+      index: true,
+    },
+    createdByUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null, index: true },
     status: { type: String, default: 'Available' },
     statusRank: { type: Number, default: 0, index: true },
     soldAt: Date,
@@ -66,5 +74,6 @@ propertySchema.pre('findOneAndUpdate', function () {
 });
 
 propertySchema.index({ statusRank: 1, createdAt: -1 });
+propertySchema.index({ moderationStatus: 1, statusRank: 1, createdAt: -1 });
 
 export const Property = mongoose.model('Property', propertySchema); 

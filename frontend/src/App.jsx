@@ -5,12 +5,14 @@ import { AdminLoginPage } from './pages/AdminLoginPage'
 import { AdminLayout } from './pages/admin/AdminLayout'
 import { AdminDashboardHome } from './pages/admin/AdminDashboardHome'
 import { AdminPropertiesPage } from './pages/admin/AdminPropertiesPage'
-import { AdminSellersPage } from './pages/admin/AdminSellersPage'
 import { AdminDealsPage } from './pages/admin/AdminDealsPage'
 import { AdminInquiriesPage } from './pages/admin/AdminInquiriesPage'
 import { AdminRefundsPage } from './pages/admin/AdminRefundsPage'
 import { AdminGeneralQueriesPage } from './pages/admin/AdminGeneralQueriesPage'
 import { AdminInvestorsLoungePage } from './pages/admin/AdminInvestorsLoungePage'
+import { AdminProviderApplicationsPage } from './pages/admin/AdminProviderApplicationsPage'
+import { AdminPendingPropertiesPage } from './pages/admin/AdminPendingPropertiesPage'
+import { AdminPropertyReviewPage } from './pages/admin/AdminPropertyReviewPage'
 import { AboutPage } from './pages/AboutPage'
 import { GettingStartedPage } from './pages/GettingStartedPage'
 import { PropertyDetailsPage } from './pages/PropertyDetailsPage'
@@ -22,6 +24,13 @@ import { BuyerTermsPage } from './pages/BuyerTermsPage'
 import { PropertyConnectPage } from './pages/PropertyConnectPage'
 import { BespokePropertyConnectPage } from './pages/BespokePropertyConnectPage'
 import { SellerTermsPage } from './pages/SellerTermsPage'
+import { UserLoginPage } from './pages/UserLoginPage'
+import { UserRegisterPage } from './pages/UserRegisterPage'
+import { UserAccountPage } from './pages/UserAccountPage'
+import { ProviderPropertiesPage } from './pages/provider/ProviderPropertiesPage'
+import { ProviderSubmitPropertyPage } from './pages/provider/ProviderSubmitPropertyPage'
+import { ProviderPropertyDetailsPage } from './pages/provider/ProviderPropertyDetailsPage'
+import { ProviderEditPropertyPage } from './pages/provider/ProviderEditPropertyPage'
 
 function App() {
   return (
@@ -38,6 +47,13 @@ function App() {
       <Route path="/property-connect" element={<PropertyConnectPage />} />
       <Route path="/deal-source-terms" element={<DealSourceTermsPage />} />
       <Route path="/refunds" element={<RefundPage />} />
+      <Route path="/login" element={<UserLoginPage />} />
+      <Route path="/register" element={<UserRegisterPage />} />
+      <Route path="/account" element={<UserAccountPage />} />
+      <Route path="/provider/properties" element={<ProviderPropertiesPage />} />
+      <Route path="/provider/properties/new" element={<ProviderSubmitPropertyPage />} />
+      <Route path="/provider/properties/:id" element={<ProviderPropertyDetailsPage />} />
+      <Route path="/provider/properties/:id/edit" element={<ProviderEditPropertyPage />} />
       <Route
         path="/admin"
         element={
@@ -59,11 +75,31 @@ function App() {
         }
       />
       <Route
-        path="/admin/sellers"
+        path="/admin/pending-properties"
         element={
           <RequireAdmin>
             <AdminLayout>
-              <AdminSellersPage />
+              <AdminPendingPropertiesPage />
+            </AdminLayout>
+          </RequireAdmin>
+        }
+      />
+      <Route
+        path="/admin/pending-properties/:id"
+        element={
+          <RequireAdmin>
+            <AdminLayout>
+              <AdminPropertyReviewPage />
+            </AdminLayout>
+          </RequireAdmin>
+        }
+      />
+      <Route
+        path="/admin/provider-applications"
+        element={
+          <RequireAdmin>
+            <AdminLayout>
+              <AdminProviderApplicationsPage />
             </AdminLayout>
           </RequireAdmin>
         }

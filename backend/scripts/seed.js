@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import { connectDB } from '../src/lib/db.js';
 import { Admin } from '../src/models/index.js';
 import { Property } from '../src/models/index.js';
+import { Seller } from '../src/models/Seller.js';
 
 async function seed() {
   await connectDB();
@@ -15,6 +16,14 @@ async function seed() {
     { upsert: true, new: true }
   );
   console.log('Seeded admin: admin@elite.co.uk / admin123');
+
+  const defaultSellerName = String(process.env.ADMIN_SELLER_NAME || 'Elite').trim() || 'Elite';
+  const defaultSellerImageUrl = String(process.env.ADMIN_SELLER_IMAGE_URL || '').trim();
+  const defaultSeller = await Seller.findOneAndUpdate(
+    { name: defaultSellerName, user: null },
+    { name: defaultSellerName, ...(defaultSellerImageUrl ? { imageUrl: defaultSellerImageUrl } : {}) },
+    { upsert: true, new: true, setDefaultsOnInsert: true }
+  );
 
   const count = await Property.countDocuments();
 
@@ -35,6 +44,7 @@ async function seed() {
         highlights: ['🏡 R2SA', '🛏 2–4 bed', '🛁 1–2 bathroom', '🛗 Lift / parking'],
         status: 'Available',
         sortOrder: 100,
+        seller: defaultSeller._id,
       },
       {
         title: '2 Bed House in Birmingham',
@@ -47,6 +57,7 @@ async function seed() {
         highlights: ['🏡 Residential', '🛏 2 bed', '🛁 1 bathroom', '🚗 Parking'],
         status: 'Available',
         sortOrder: 90,
+        seller: defaultSeller._id,
       },
       {
         title: 'Studio Apartment in Leeds',
@@ -59,6 +70,7 @@ async function seed() {
         highlights: ['🏙 City centre', '🛏 Studio', '🛁 1 bathroom', '🚆 Great transport links'],
         status: 'Available',
         sortOrder: 80,
+        seller: defaultSeller._id,
       },
       {
         title: '3 Bed Semi in Liverpool',
@@ -71,6 +83,7 @@ async function seed() {
         highlights: ['🏡 Family home', '🛏 3 bed', '🛁 1–2 bathroom', '🌳 Garden'],
         status: 'UnderOffer',
         sortOrder: 70,
+        seller: defaultSeller._id,
       },
       {
         title: '1 Bed Flat in Bristol',
@@ -83,6 +96,7 @@ async function seed() {
         highlights: ['🏡 Apartment', '🛏 1 bed', '🛁 1 bathroom', '🛗 Lift access'],
         status: 'Available',
         sortOrder: 60,
+        seller: defaultSeller._id,
       },
       {
         title: '2 Bed Terrace in London (Zone 3)',
@@ -96,6 +110,7 @@ async function seed() {
         status: 'Sold',
         soldAt: new Date(),
         sortOrder: -1,
+        seller: defaultSeller._id,
       },
     ]);
   console.log('Seeded 6 sample properties (Available, Under Offer, Sold).');

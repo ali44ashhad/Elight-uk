@@ -3,6 +3,8 @@ import { Deal } from './Deal.js';
 import { Inquiry } from './Inquiry.js';
 import { Property } from './Property.js';
 import { Refund } from './Refund.js';
+import { User } from './User.js';
+import { ProviderApplication } from './ProviderApplication.js';
 
-export { Admin, Deal, Inquiry, Property, Refund };
+export { Admin, Deal, Inquiry, Property, Refund, User, ProviderApplication };
 

@@ -6,6 +6,7 @@
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 let authToken = null;
+let userAuthToken = null;
 
 export function setAuthToken(token) {
   authToken = token;
@@ -19,15 +20,32 @@ export function clearAuthToken() {
   authToken = null;
 }
 
+export function setUserAuthToken(token) {
+  userAuthToken = token;
+}
+
+export function getUserAuthToken() {
+  return userAuthToken;
+}
+
+export function clearUserAuthToken() {
+  userAuthToken = null;
+}
+
 export async function request(method, path, options = {}) {
   const url = path.startsWith('http') ? path : `${BASE_URL}${path}`;
   const isAdmin = path.includes('/api/admin');
+  const isUserAuthedPath =
+    path.startsWith('/api/provider') || path === '/api/auth/me';
   const headers = {
     'Content-Type': 'application/json',
     ...options.headers,
   };
   if (isAdmin && authToken) {
     headers.Authorization = `Bearer ${authToken}`;
+  }
+  if (!isAdmin && isUserAuthedPath && userAuthToken) {
+    headers.Authorization = `Bearer ${userAuthToken}`;
   }
 
   const config = {
@@ -112,6 +130,124 @@ export function createInvestorsLoungeSubmission(body) {
   return request('POST', '/api/investors-lounge', { body })
 }
 
+// —— User Auth ——
+
+/** POST /api/auth/register — { name, email, password } → { token, user } */
+export function userRegister(body) {
+  return request('POST', '/api/auth/register', { body });
+}
+
+/** POST /api/auth/login — { email, password } → { token, user } */
+export function userLogin(body) {
+  return request('POST', '/api/auth/login', { body });
+}
+
+/** GET /api/auth/me (requires user auth) */
+export function userMe() {
+  return request('GET', '/api/auth/me');
+}
+
+/** PATCH /api/auth/me */
+export function userUpdateMe(body) {
+  return request('PATCH', '/api/auth/me', { body })
+}
+
+/** POST /api/auth/change-password */
+export function userChangePassword(body) {
+  return request('POST', '/api/auth/change-password', { body })
+}
+
+/** POST /api/auth/me/image — FormData with 'image' file */
+export function userUploadMeImage(formData) {
+  const url = `${BASE_URL}/api/auth/me/image`
+  const headers = {}
+  if (userAuthToken) headers.Authorization = `Bearer ${userAuthToken}`
+  return fetch(url, {
+    method: 'POST',
+    headers,
+    body: formData,
+  }).then(async (res) => {
+    const text = await res.text()
+    let data = null
+    try {
+      data = text ? JSON.parse(text) : null
+    } catch {
+      // ignore non-JSON
+    }
+    if (!res.ok) {
+      const err = new Error(data?.error || res.statusText || 'Upload failed')
+      err.status = res.status
+      err.data = data
+      throw err
+    }
+    return data
+  })
+}
+
+// —— Provider (user auth required) ——
+
+/** POST /api/provider/apply */
+export function providerApply(body = {}) {
+  return request('POST', '/api/provider/apply', { body });
+}
+
+/** GET /api/provider/me */
+export function providerMe() {
+  return request('GET', '/api/provider/me');
+}
+
+/** GET /api/provider/properties */
+export function providerGetMyProperties() {
+  return request('GET', '/api/provider/properties');
+}
+
+/** GET /api/provider/properties/:id */
+export function providerGetMyProperty(id) {
+  return request('GET', `/api/provider/properties/${id}`);
+}
+
+/** POST /api/provider/properties */
+export function providerCreateProperty(body) {
+  return request('POST', '/api/provider/properties', { body });
+}
+
+/** POST /api/provider/properties/:id/images — FormData with 'images' file(s) */
+export function providerUploadPropertyImages(propertyId, formData) {
+  const url = `${BASE_URL}/api/provider/properties/${propertyId}/images`
+  const headers = {}
+  if (userAuthToken) headers.Authorization = `Bearer ${userAuthToken}`
+  return fetch(url, {
+    method: 'POST',
+    headers,
+    body: formData,
+  }).then(async (res) => {
+    const text = await res.text()
+    let data = null
+    try {
+      data = text ? JSON.parse(text) : null
+    } catch {
+      // ignore non-JSON responses
+    }
+    if (!res.ok) {
+      const err = new Error(data?.error || res.statusText || 'Upload failed')
+      err.status = res.status
+      err.data = data
+      throw err
+    }
+    return data
+  })
+}
+
+/** DELETE /api/provider/properties/:propertyId/images/:imageId */
+export function providerDeletePropertyImage(propertyId, imageId) {
+  return request('DELETE', `/api/provider/properties/${propertyId}/images/${imageId}`);
+}
+
+/** PATCH /api/provider/properties/:id */
+export function providerUpdateProperty(id, body) {
+  return request('PATCH', `/api/provider/properties/${id}`, { body });
+}
+
 // —— Admin Auth ——
 
 /** POST /api/admin/login — { email, password } → { token, admin } */
@@ -122,6 +258,19 @@ export function login(body) {
 /** GET /api/admin/me (requires auth) */
 export function getMe() {
   return request('GET', '/api/admin/me');
+}
+
+// —— Admin Provider Applications (require auth) ——
+
+/** GET /api/admin/provider-applications */
+export function getAdminProviderApplications(params = {}) {
+  const q = new URLSearchParams(params).toString()
+  return request('GET', `/api/admin/provider-applications${q ? `?${q}` : ''}`)
+}
+
+/** PATCH /api/admin/provider-applications/:id */
+export function reviewAdminProviderApplication(id, body) {
+  return request('PATCH', `/api/admin/provider-applications/${id}`, { body })
 }
 
 // —— Admin Properties (require auth) ——

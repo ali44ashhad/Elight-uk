@@ -4,6 +4,7 @@ import * as api from '../api'
 import { Header } from '../components/Layout/Header'
 import { Footer } from '../components/Layout/Footer'
 import { Card } from '../components/ui/Card'
+import logo from '../assets/logo.png'
 
 function formatMoney(n) {
   if (n == null || Number.isNaN(Number(n))) return '—'
@@ -122,9 +123,11 @@ export function SellerProfilePage() {
                       className="h-24 w-24 rounded-full object-cover ring-2 ring-teal-200"
                     />
                   ) : (
-                    <div className="flex h-24 w-24 items-center justify-center rounded-full bg-teal-200 text-3xl font-bold text-teal-800">
-                      {(seller.name || '?').charAt(0).toUpperCase()}
-                    </div>
+                    <img
+                      src={logo}
+                      alt=""
+                      className="h-24 w-24 rounded-full bg-white object-contain p-4 ring-2 ring-teal-200"
+                    />
                   )}
                   <div>
                     <h1 className="text-2xl font-bold text-teal-900">{seller.name || 'Seller'}</h1>

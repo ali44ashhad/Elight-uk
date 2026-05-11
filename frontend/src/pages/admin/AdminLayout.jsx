@@ -6,7 +6,8 @@ import logo from '../../assets/logo.png'
 const NAV_ITEMS = [
   { path: '/admin', label: 'Dashboard' },
   { path: '/admin/properties', label: 'Properties' },
-  { path: '/admin/sellers', label: 'Sellers' },
+  { path: '/admin/pending-properties', label: 'Pending properties' },
+  { path: '/admin/provider-applications', label: 'Provider applications' },
   { path: '/admin/deals', label: 'Deals' },
   { path: '/admin/inquiries', label: 'Inquiries' },
   { path: '/admin/refunds', label: 'Refunds' },

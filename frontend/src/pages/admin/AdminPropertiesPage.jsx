@@ -62,7 +62,6 @@ export function AdminPropertiesPage() {
   const [error, setError] = useState(null)
   const [filter, setFilter] = useState('')
 
-  const [sellers, setSellers] = useState([])
   const [createForm, setCreateForm] = useState({
     title: '',
     location: '',
@@ -75,7 +74,6 @@ export function AdminPropertiesPage() {
     highlights: [],
     customHighlight: '',
     status: 'Available',
-    sellerId: '',
   })
   const MAX_IMAGES = 10
   const [createFiles, setCreateFiles] = useState([])
@@ -111,18 +109,8 @@ export function AdminPropertiesPage() {
     }
   }
 
-  async function loadSellers() {
-    try {
-      const list = await api.getAdminSellers()
-      setSellers(Array.isArray(list) ? list : [])
-    } catch {
-      // ignore
-    }
-  }
-
   useEffect(() => {
     loadProperties()
-    loadSellers()
   }, [])
 
   function handleCreateFilesChange(e) {
@@ -159,8 +147,6 @@ export function AdminPropertiesPage() {
       if (createForm.roi.trim()) body.roi = Number(createForm.roi)
       if (createForm.tenancyDetails.trim()) body.tenancyDetails = createForm.tenancyDetails.trim()
       if (createForm.status) body.status = createForm.status
-      if (createForm.sellerId?.trim()) body.sellerId = createForm.sellerId.trim()
-      else body.sellerId = null
       const detailsTrimmed = createForm.details && createForm.details.trim()
       const hasDetailsText = detailsTrimmed && detailsTrimmed.replace(/<[^>]*>/g, '').trim()
       body.details = hasDetailsText ? detailsTrimmed : ''
@@ -196,7 +182,6 @@ export function AdminPropertiesPage() {
         highlights: [],
         customHighlight: '',
         status: 'Available',
-        sellerId: '',
       })
       previewUrls.forEach((url) => {
         if (typeof url === 'string' && url.startsWith('blob:')) {
@@ -308,7 +293,6 @@ export function AdminPropertiesPage() {
                       highlights: [],
                       customHighlight: '',
                       status: 'Available',
-                      sellerId: '',
                     })
                     previewUrls.forEach((url) => {
                       if (typeof url === 'string' && url.startsWith('blob:')) {
@@ -345,7 +329,6 @@ export function AdminPropertiesPage() {
                     highlights: [],
                     customHighlight: '',
                     status: 'Available',
-                    sellerId: '',
                   })
                   previewUrls.forEach((url) => {
                     if (typeof url === 'string' && url.startsWith('blob:')) {
@@ -423,24 +406,7 @@ export function AdminPropertiesPage() {
                 <option value="Sold">Sold</option>
               </select>
             </label>
-            <label className="block">
-              <span className="mb-1 block text-sm font-medium text-slate-800">Seller</span>
-              <select
-                className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none transition focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 focus:ring-offset-white"
-                value={createForm.sellerId || ''}
-                onChange={(e) => setCreateForm((f) => ({ ...f, sellerId: e.target.value }))}
-              >
-                <option value="">— No seller —</option>
-                {sellers.map((s) => {
-                  const id = s?.id || s?._id
-                  return (
-                    <option key={id} value={id}>
-                      {s?.name || id}
-                    </option>
-                  )}
-                )}
-              </select>
-            </label>
+            <div className="block" />
           </div>
           <Textarea
             label="Tenancy details (optional)"
@@ -755,7 +721,6 @@ export function AdminPropertiesPage() {
                               highlights: Array.isArray(p?.highlights) ? p.highlights : [],
                               customHighlight: '',
                               status: p?.status || 'Available',
-                              sellerId: p?.seller?.id || p?.seller?._id || p?.seller || '',
                             })
                             window.scrollTo({ top: 0, behavior: 'smooth' })
                           }}

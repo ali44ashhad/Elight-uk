@@ -178,9 +178,11 @@ function OpportunityCard({ property }) {
                   className="h-11 w-11 rounded-full object-cover"
                 />
               ) : (
-                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-[0.7rem] font-semibold text-emerald-800">
-                  {(seller.name || '?').charAt(0).toUpperCase()}
-                </div>
+                <img
+                  src={logo}
+                  alt=""
+                  className="h-11 w-11 rounded-full bg-white object-contain p-2 ring-1 ring-black/10"
+                />
               )}  
             </Link>
           ) : null}
@@ -271,7 +273,8 @@ export function FeaturedOpportunity({ featured = [], loading, loadError }) {
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight text-slate-900">Featured Opportunities</h2>
           <p className="mt-2 text-sm text-slate-700">
-          Buying Property or Renting Property for Business: deals are sold on a first come, first served basis.           </p>
+            Buying Property or Renting Property for Business: deals are sold on a first come, first served basis.
+          </p>
         </div>
 
         {loading ? (

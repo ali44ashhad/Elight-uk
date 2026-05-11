@@ -7,6 +7,7 @@ import { Card } from '../components/ui/Card'
 import { Button } from '../components/ui/Button'
 import { Input } from '../components/ui/Input'
 import { Textarea } from '../components/ui/Textarea'
+import logo from '../assets/logo.png'
 
 function formatMoney(n) {
   if (n == null || Number.isNaN(Number(n))) return '—'
@@ -235,9 +236,11 @@ export function PropertyDetailsPage() {
                           className="h-14 w-14 rounded-full object-cover"
                         />
                       ) : (
-                        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-teal-100 text-lg font-semibold text-teal-800">
-                          {(property.seller.name || '?').charAt(0).toUpperCase()}
-                        </div>
+                        <img
+                          src={logo}
+                          alt=""
+                          className="h-14 w-14 rounded-full bg-white object-contain p-3 ring-1 ring-black/10"
+                        />
                       )} 
                     </Link>
                   ) : null}
