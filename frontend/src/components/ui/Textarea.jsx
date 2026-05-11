@@ -1,3 +1,4 @@
+import React from 'react'
 export function Textarea({ label, hint, error, className = '', ...props }) {
   return (
     <label className={`block ${className}`}>

@@ -3,6 +3,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import logo from '../../assets/logo.png'
+import React from 'react'
 const NAV_ITEMS = [
   { path: '/admin', label: 'Dashboard' },
   { path: '/admin/properties', label: 'Properties' },

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import * as api from '../../api'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
@@ -20,7 +20,7 @@ function EmptyState({ title, subtitle }) {
       {subtitle ? <div className="mt-1 text-sm text-slate-600">{subtitle}</div> : null}
     </Card>
   )
-}
+} 
 
 export function AdminGeneralQueriesPage() {
   const [items, setItems] = useState([])

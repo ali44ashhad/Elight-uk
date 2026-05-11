@@ -1,3 +1,4 @@
+import React from 'react'
 export function Input({ label, hint, error, className = '', ...props }) {
   return (
     <label className={`block ${className}`}>

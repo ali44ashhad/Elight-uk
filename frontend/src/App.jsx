@@ -1,3 +1,4 @@
+import React from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { RequireAdmin } from './components/auth/RequireAdmin'
 import { HomePage } from './pages/HomePage'
