@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { path: '/admin/properties', label: 'Properties' },
   { path: '/admin/pending-properties', label: 'Pending properties' },
   { path: '/admin/provider-applications', label: 'Provider applications' },
+  { path: '/admin/users', label: 'Users & providers' },
   { path: '/admin/deals', label: 'Deals' },
   { path: '/admin/inquiries', label: 'Inquiries' },
   { path: '/admin/refunds', label: 'Refunds' },

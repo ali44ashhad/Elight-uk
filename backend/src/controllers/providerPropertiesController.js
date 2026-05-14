@@ -6,10 +6,15 @@ import multer from 'multer';
 import { cloudinary } from '../lib/cloudinary.js';
 
 async function requireApprovedProvider(userId) {
-  const user = await User.findById(userId).select('providerStatus').lean();
+  const user = await User.findById(userId).select('providerStatus isActive').lean();
   if (!user) {
     const err = new Error('User not found');
     err.statusCode = 404;
+    throw err;
+  }
+  if (user.isActive === false) {
+    const err = new Error('Account deactivated');
+    err.statusCode = 403;
     throw err;
   }
   if (user.providerStatus !== 'approved') {

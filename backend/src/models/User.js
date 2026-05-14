@@ -18,6 +18,8 @@ const userSchema = new mongoose.Schema(
       default: 'none',
       index: true,
     },
+    /** When false, the user cannot sign in or call authenticated APIs. Approved providers also hide all their listings. */
+    isActive: { type: Boolean, default: true, index: true },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );

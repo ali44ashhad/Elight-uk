@@ -12,6 +12,7 @@ import { AdminRefundsPage } from './pages/admin/AdminRefundsPage'
 import { AdminGeneralQueriesPage } from './pages/admin/AdminGeneralQueriesPage'
 import { AdminInvestorsLoungePage } from './pages/admin/AdminInvestorsLoungePage'
 import { AdminProviderApplicationsPage } from './pages/admin/AdminProviderApplicationsPage'
+import { AdminUsersPage } from './pages/admin/AdminUsersPage'
 import { AdminPendingPropertiesPage } from './pages/admin/AdminPendingPropertiesPage'
 import { AdminPropertyReviewPage } from './pages/admin/AdminPropertyReviewPage'
 import { AboutPage } from './pages/AboutPage'
@@ -101,6 +102,16 @@ function App() {
           <RequireAdmin>
             <AdminLayout>
               <AdminProviderApplicationsPage />
+            </AdminLayout>
+          </RequireAdmin>
+        }
+      />
+      <Route
+        path="/admin/users"
+        element={
+          <RequireAdmin>
+            <AdminLayout>
+              <AdminUsersPage />
             </AdminLayout>
           </RequireAdmin>
         }

@@ -32,6 +32,8 @@ const propertySchema = new mongoose.Schema(
       default: 'approved',
       index: true,
     },
+    /** Public site only shows listings where this is true (and moderation approved). Admins deactivate via user suspension. */
+    listingActive: { type: Boolean, default: true, index: true },
     createdByUser: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null, index: true },
     status: { type: String, default: 'Available' },
     statusRank: { type: Number, default: 0, index: true },
@@ -74,6 +76,6 @@ propertySchema.pre('findOneAndUpdate', function () {
 });
 
 propertySchema.index({ statusRank: 1, createdAt: -1 });
-propertySchema.index({ moderationStatus: 1, statusRank: 1, createdAt: -1 });
+propertySchema.index({ moderationStatus: 1, listingActive: 1, statusRank: 1, createdAt: -1 });
 
 export const Property = mongoose.model('Property', propertySchema); 

@@ -5,6 +5,7 @@ import { Footer } from '../components/Layout/Footer'
 import { FeaturedOpportunity } from '../components/home/FeaturedOpportunity'
 import { Header } from '../components/Layout/Header'
 import heroVideo from '../assets/hero.mp4'
+import logo from '../assets/logo.png' 
 
 function AnimatedNumber({ end, durationMs = 1400, suffix = '' }) {
   const ref = useRef(null)
@@ -14,7 +15,6 @@ function AnimatedNumber({ end, durationMs = 1400, suffix = '' }) {
   useEffect(() => {
     const el = ref.current
     if (!el || hasRun) return
-
     const prefersReducedMotion =
       typeof window !== 'undefined' &&
       typeof window.matchMedia === 'function' &&
@@ -222,7 +222,10 @@ export function HomePage() {
               />
               <div className="relative z-10 w-full max-w-3xl overflow-hidden rounded-2xl bg-white shadow-2xl">
                 <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
-                  <div className="text-sm font-semibold text-slate-900">Join our mailing list</div>
+                  <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
+                    <img src={logo} alt="" className="h-10 w-auto" aria-hidden />
+                    <span>Investors mailing list</span>
+                  </div>
                   <button
                     type="button"
                     onClick={() => setIsMailchimpOpen(false)}
@@ -234,7 +237,7 @@ export function HomePage() {
                 </div>
                 <div className="max-h-[75vh] overflow-auto p-5">
                   <p className="text-sm text-slate-600">
-                    Enter your details below to join the Globcal Properties mailing list.
+                  Get Access to High-Yield Property Deals Before They Hit the Market. Enter your details below.
                   </p>
 
                   <form
@@ -320,9 +323,21 @@ export function HomePage() {
                     Join the{' '}
                     <span className="font-bold text-emerald-600">Investors Club</span>
                   </h2>
-                  <p className="mt-2 text-slate-600">
-                  Be the first to receive weekly updates: join the investors club. 
-                  </p>
+                  <div className="mt-2 space-y-2 text-sm leading-relaxed text-slate-600">
+                    <p>Be the first to receive weekly/monthly* updates and more like:</p>
+                    <ul className="list-inside list-disc space-y-1 pl-1 marker:text-emerald-600">
+                      <li>Access Current Investment Opportunities</li>
+                      <li>Be Notified Before Deals Go Live</li>
+                      <li>Get Priority Access to My Next Deal*</li>
+                      <li>Join My Private Investor List*</li>
+                      <li>Receive Off-Market Property Opportunities*</li>
+                    </ul>
+                    <p>
+                      {
+                        '*If the right deal came along, would you be ready to buy it immediately!   Register as an Investor'
+                      }
+                    </p>
+                  </div>
                 </div>
                 <button
                   type="button"

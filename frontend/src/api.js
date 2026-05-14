@@ -360,6 +360,17 @@ export function deleteSeller(id) {
   return request('DELETE', `/api/admin/sellers/${id}`);
 }
 
+/** GET /api/admin/users — optional: page, limit, role=all|buyers|providers, q=search */
+export function getAdminUsers(params = {}) {
+  const q = new URLSearchParams(params).toString();
+  return request('GET', `/api/admin/users${q ? `?${q}` : ''}`);
+}
+
+/** PATCH /api/admin/users/:id — { isActive: boolean } */
+export function patchAdminUser(id, body) {
+  return request('PATCH', `/api/admin/users/${id}`, { body });
+}
+
 /** POST /api/admin/sellers/:id/image — FormData with 'image' file */
 export function uploadSellerImage(sellerId, formData) {
   const url = `${BASE_URL}/api/admin/sellers/${sellerId}/image`;

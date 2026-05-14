@@ -20,6 +20,7 @@ import sellers from './routes/sellers.js';
 import auth from './routes/auth.js';
 import provider from './routes/provider.js';
 import adminProviderApplications from './routes/admin/providerApplications.js';
+import adminUsers from './routes/admin/users.js';
 import { runFourteenDayCron } from './jobs/fourteenDayCron.js';
 
 const app = express();
@@ -63,6 +64,7 @@ app.use('/api/admin/general-queries', adminGeneralQueries);
 app.use('/api/admin/investors-lounge', adminInvestorsLounge);
 app.use('/api/admin/sellers', adminSellers);
 app.use('/api/admin/provider-applications', adminProviderApplications);
+app.use('/api/admin/users', adminUsers);
 
 app.get('/api/health', (req, res) => res.json({ ok: true }));
 

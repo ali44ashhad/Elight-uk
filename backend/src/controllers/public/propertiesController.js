@@ -15,10 +15,11 @@ export async function listProperties(req, res) {
   const pagination = parsePagination(req.query);
   const { seller: sellerId } = req.query;
 
-  // Backward compatible: older properties may not have moderationStatus set.
+  // Backward compatible: older properties may not have moderationStatus or listingActive set.
   const filter = {
     $and: [
       { $or: [{ moderationStatus: 'approved' }, { moderationStatus: { $exists: false } }] },
+      { $or: [{ listingActive: true }, { listingActive: { $exists: false } }] },
       ...(sellerId ? [{ seller: sellerId }] : []),
     ],
   };
@@ -69,7 +70,10 @@ export async function listProperties(req, res) {
 export async function getProperty(req, res) {
   const property = await Property.findOne({
     _id: req.params.id,
-    $or: [{ moderationStatus: 'approved' }, { moderationStatus: { $exists: false } }],
+    $and: [
+      { $or: [{ moderationStatus: 'approved' }, { moderationStatus: { $exists: false } }] },
+      { $or: [{ listingActive: true }, { listingActive: { $exists: false } }] },
+    ],
   })
     .populate({
       path: 'seller',

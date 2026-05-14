@@ -44,6 +44,7 @@ export async function register(req, res) {
       name: user.name,
       email: user.email,
       providerStatus: user.providerStatus,
+      isActive: true,
     },
   });
 }
@@ -62,6 +63,10 @@ export async function login(req, res) {
   const ok = await bcrypt.compare(String(password), user.passwordHash);
   if (!ok) return res.status(401).json({ error: 'Invalid credentials' });
 
+  if (user.isActive === false) {
+    return res.status(403).json({ error: 'This account has been deactivated. Please contact support.' });
+  }
+
   const token = jwt.sign({ userId: user._id.toString() }, USER_JWT_SECRET, { expiresIn: '30d' });
   res.json({
     token,
@@ -70,13 +75,14 @@ export async function login(req, res) {
       name: user.name,
       email: user.email,
       providerStatus: user.providerStatus,
+      isActive: user.isActive !== false,
     },
   });
 }
 
 export async function me(req, res) {
   const user = await User.findById(req.userId)
-    .select('name email providerStatus imageUrl preferences')
+    .select('name email providerStatus imageUrl preferences isActive')
     .lean();
   if (!user) return res.status(404).json({ error: 'User not found' });
   res.json({
@@ -86,6 +92,7 @@ export async function me(req, res) {
     providerStatus: user.providerStatus,
     imageUrl: user.imageUrl,
     preferences: user.preferences || {},
+    isActive: user.isActive !== false,
   });
 }
 
@@ -108,7 +115,7 @@ export async function updateMe(req, res) {
   }
 
   const user = await User.findByIdAndUpdate(req.userId, data, { new: true, runValidators: true })
-    .select('name email providerStatus imageUrl preferences')
+    .select('name email providerStatus imageUrl preferences isActive')
     .lean();
   if (!user) return res.status(404).json({ error: 'User not found' });
 
@@ -119,6 +126,7 @@ export async function updateMe(req, res) {
     providerStatus: user.providerStatus,
     imageUrl: user.imageUrl,
     preferences: user.preferences || {},
+    isActive: user.isActive !== false,
   });
 }
 
@@ -214,6 +222,7 @@ export async function uploadMeImage(req, res) {
     providerStatus: user.providerStatus,
     imageUrl: user.imageUrl,
     preferences: user.preferences || {},
+    isActive: user.isActive !== false,
   });
 }
 

@@ -17,14 +17,15 @@ export function Footer() {
   ];
 
   const footerLinks = [
-    'Home',
-    'About us',
-    'Bespoke Property Connect',
-    'Buyer Terms',
-    'Seller Terms',
-    'Privacy Policy',
-    'Property Connect',
-    'Refunds'
+    { label: 'Home', to: '/' },
+    { label: 'About us', to: '/about-us' },
+    { label: 'Bespoke Property Connect', to: '/bespoke-property-connect' },
+    { label: 'Buyer Terms', to: '/buyer-terms' },
+    { label: 'Seller Terms', to: '/seller-terms' },
+    { label: 'Privacy Policy', to: '/privacy-policy' },
+    { label: 'Property Connect', to: '/property-connect' },
+    { label: 'Refunds', to: '/refunds' },
+    { label: 'Deal Sourcer', to: '/login' }
   ];
 
   return (
@@ -60,12 +61,9 @@ export function Footer() {
  
           <nav className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm">
             {footerLinks.map((link, idx) => (
-              <span key={link} className="inline-flex items-center gap-x-3">
-                <Link
-                  to={`/${link.toLowerCase().replace(/\s+/g, '-')}`}
-                  className="text-slate-400 transition-colors hover:text-emerald-400"
-                >
-                  {link}
+              <span key={link.label} className="inline-flex items-center gap-x-3">
+                <Link to={link.to} className="text-slate-400 transition-colors hover:text-emerald-400">
+                  {link.label}
                 </Link>
                 {idx < footerLinks.length - 1 ? (
                   <span aria-hidden="true" className="text-slate-600">
