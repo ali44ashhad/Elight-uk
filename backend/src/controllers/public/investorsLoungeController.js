@@ -2,16 +2,20 @@ import { InvestorsLoungeSubmission } from '../../models/InvestorsLoungeSubmissio
 import { withId } from '../../utils/mapId.js';
 
 export async function createInvestorsLoungeSubmission(req, res) {
-  const { fullName, mobileNumber, emailAddress, terms } = req.body || {};
+  const { fullName, companyName, mobileNumber, emailAddress, website, terms } = req.body || {};
 
-  if (!fullName || !mobileNumber || !emailAddress) {
-    return res.status(400).json({ error: 'Full name, mobile number and email address are required' });
+  if (!fullName || !companyName || !mobileNumber || !emailAddress) {
+    return res.status(400).json({
+      error: 'Full name, company name, mobile number and email address are required',
+    });
   }
 
   const doc = await InvestorsLoungeSubmission.create({
     fullName: String(fullName).trim(),
+    companyName: String(companyName).trim(),
     mobileNumber: String(mobileNumber).trim(),
     emailAddress: String(emailAddress).trim(),
+    website: website ? String(website).trim() : '',
     terms: Array.isArray(terms) ? terms.map((t) => String(t).trim()).filter(Boolean) : [],
   });
 

@@ -3,8 +3,10 @@ import mongoose from 'mongoose';
 const investorsLoungeSubmissionSchema = new mongoose.Schema(
   {
     fullName: { type: String, required: true },
+    companyName: { type: String, required: true },
     mobileNumber: { type: String, required: true },
     emailAddress: { type: String, required: true },
+    website: { type: String, default: '' },
     terms: { type: [String], default: [] },
   },
   { timestamps: true }
