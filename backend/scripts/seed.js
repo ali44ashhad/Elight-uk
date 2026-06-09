@@ -8,7 +8,6 @@ import { Seller } from '../src/models/Seller.js';
 
 async function seed() {
   await connectDB();
-
   const hash = await bcrypt.hash('admin123', 10);
   await Admin.findOneAndUpdate(
     { email: 'admin@elite.co.uk' },
@@ -16,7 +15,6 @@ async function seed() {
     { upsert: true, new: true }
   );
   console.log('Seeded admin: admin@elite.co.uk / admin123');
-
   const defaultSellerName = String(process.env.ADMIN_SELLER_NAME || 'Elite').trim() || 'Elite';
   const defaultSellerImageUrl = String(process.env.ADMIN_SELLER_IMAGE_URL || '').trim();
   const defaultSeller = await Seller.findOneAndUpdate(
@@ -114,7 +112,6 @@ async function seed() {
       },
     ]);
   console.log('Seeded 6 sample properties (Available, Under Offer, Sold).');
-
   await mongoose.disconnect();
   console.log('Seed done.');
   process.exit(0);
