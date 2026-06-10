@@ -11,6 +11,7 @@ export function UserRegisterPage() {
   const { register, error, setError } = useUserAuth()
   const [name, setName] = useState('')
   const [companyName, setCompanyName] = useState('')
+  const [registeredNumber, setRegisteredNumber] = useState('')
   const [website, setWebsite] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -28,7 +29,7 @@ export function UserRegisterPage() {
     setBusy(true)
     setError(null)
     try {
-      await register({ name, companyName, website, email, password })
+      await register({ name, companyName, registeredNumber, website, email, password })
       nav(redirectTo, { replace: true })
     } finally {
       setBusy(false)
@@ -55,6 +56,13 @@ export function UserRegisterPage() {
               label="Company name"
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
+              required
+            />
+            <Input
+              label="Registered number"
+              value={registeredNumber}
+              onChange={(e) => setRegisteredNumber(e.target.value)}
+              placeholder="e.g. 12345678"
               required
             />
             <Input

@@ -167,6 +167,11 @@ export function AdminUsersPage() {
                       {row?.companyName ? (
                         <div className="mt-0.5 text-slate-700">{row.companyName}</div>
                       ) : null}
+                      {row?.registeredNumber ? (
+                        <div className="mt-0.5 text-slate-600">
+                          Reg. no. <span className="font-medium text-slate-800">{row.registeredNumber}</span>
+                        </div>
+                      ) : null}
                       <div className="mt-0.5 text-slate-600">{row?.email || '—'}</div>
                       {row?.website ? (
                         <div className="mt-0.5 break-all text-slate-500">

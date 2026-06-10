@@ -11,7 +11,7 @@ function normalizeEmail(email) {
 }
 
 export async function register(req, res) {
-  const { name, companyName, website, email, password } = req.body || {};
+  const { name, companyName, registeredNumber, website, email, password } = req.body || {};
   const normalizedEmail = normalizeEmail(email);
 
   if (!name || !String(name).trim()) {
@@ -19,6 +19,9 @@ export async function register(req, res) {
   }
   if (!companyName || !String(companyName).trim()) {
     return res.status(400).json({ error: 'Company name is required' });
+  }
+  if (!registeredNumber || !String(registeredNumber).trim()) {
+    return res.status(400).json({ error: 'Registered number is required' });
   }
   if (!normalizedEmail) {
     return res.status(400).json({ error: 'Email is required' });
@@ -36,6 +39,7 @@ export async function register(req, res) {
   const user = await User.create({
     name: String(name).trim(),
     companyName: String(companyName).trim(),
+    registeredNumber: String(registeredNumber).trim(),
     website: website ? String(website).trim() : '',
     email: normalizedEmail,
     passwordHash,

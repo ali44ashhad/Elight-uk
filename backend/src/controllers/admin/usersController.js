@@ -18,12 +18,12 @@ export async function listUsers(req, res) {
   const filter = { ...buildUserFilter(role === 'providers' || role === 'buyers' ? role : '') };
   if (q) {
     const rx = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
-    filter.$or = [{ name: rx }, { email: rx }, { companyName: rx }];
+    filter.$or = [{ name: rx }, { email: rx }, { companyName: rx }, { registeredNumber: rx }];
   }
 
   const base = User.find(filter)
     .sort({ createdAt: -1 })
-    .select('name companyName website email providerStatus isActive createdAt updatedAt');
+    .select('name companyName registeredNumber website email providerStatus isActive createdAt updatedAt');
 
   if (!pagination) {
     const users = await base.lean();

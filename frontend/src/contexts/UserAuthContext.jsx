@@ -10,10 +10,17 @@ export function UserAuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const register = useCallback(async ({ name, companyName, website, email, password }) => {
+  const register = useCallback(async ({ name, companyName, registeredNumber, website, email, password }) => {
     setError(null)
     try {
-      const { token, user } = await api.userRegister({ name, companyName, website, email, password })
+      const { token, user } = await api.userRegister({
+        name,
+        companyName,
+        registeredNumber,
+        website,
+        email,
+        password,
+      })
       api.setUserAuthToken(token)
       localStorage.setItem(TOKEN_KEY, token)
       setUser(user)
