@@ -32,7 +32,7 @@ export function AdminInvestorsLoungePage() {
     const q = filter.trim().toLowerCase()
     if (!q) return items
     return items.filter((x) => {
-      const blob = `${x?.fullName || ''} ${x?.companyName || ''} ${x?.emailAddress || ''} ${x?.mobileNumber || ''} ${x?.website || ''} ${(x?.terms || []).join(
+      const blob = `${x?.fullName || ''} ${x?.emailAddress || ''} ${x?.mobileNumber || ''} ${(x?.terms || []).join(
         ' '
       )}`.toLowerCase()
       return blob.includes(q)
@@ -71,7 +71,7 @@ export function AdminInvestorsLoungePage() {
                 label="Filter"
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
-                placeholder="Search by name, company, email, mobile…"
+                placeholder="Search by name, email, mobile…"
               />
             </div>
             <Button variant="secondary" onClick={load} disabled={loading} className="w-full sm:w-auto">
@@ -115,9 +115,6 @@ export function AdminInvestorsLoungePage() {
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <div className="min-w-0">
                       <div className="text-sm font-black text-slate-900">{s?.fullName || '—'}</div>
-                      {s?.companyName ? (
-                        <div className="mt-0.5 text-xs font-medium text-slate-700">{s.companyName}</div>
-                      ) : null}
                       <div className="mt-1 text-xs text-slate-600">
                         Submitted <span className="font-medium text-slate-800">{formatDate(s?.createdAt)}</span>
                       </div>
@@ -133,28 +130,10 @@ export function AdminInvestorsLoungePage() {
                     <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Contact</div>
                     <div className="mt-2 text-xs text-slate-700">
                       <div className="break-all">
-                        <span className="font-medium text-slate-900">Company:</span> {s?.companyName || '—'}
-                      </div>
-                      <div className="mt-1 break-all">
                         <span className="font-medium text-slate-900">Email:</span> {s?.emailAddress || '—'}
                       </div>
                       <div className="mt-1 break-all">
                         <span className="font-medium text-slate-900">Mobile:</span> {s?.mobileNumber || '—'}
-                      </div>
-                      <div className="mt-1 break-all">
-                        <span className="font-medium text-slate-900">Website:</span>{' '}
-                        {s?.website ? (
-                          <a
-                            href={s.website.startsWith('http') ? s.website : `https://${s.website}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-emerald-700 hover:underline"
-                          >
-                            {s.website}
-                          </a>
-                        ) : (
-                          '—'
-                        )}
                       </div>
                     </div>
                   </div>

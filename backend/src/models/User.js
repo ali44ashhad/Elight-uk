@@ -3,6 +3,8 @@ import mongoose from 'mongoose';
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true, maxlength: 120 },
+    companyName: { type: String, default: '', trim: true, maxlength: 200 },
+    website: { type: String, default: '', trim: true, maxlength: 500 },
     email: { type: String, required: true, unique: true, trim: true, lowercase: true, maxlength: 320 },
     passwordHash: { type: String, required: true },
     imagePublicId: { type: String, default: '' },

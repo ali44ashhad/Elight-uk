@@ -10,6 +10,8 @@ import { useUserAuth } from '../contexts/UserAuthContext'
 export function UserRegisterPage() {
   const { register, error, setError } = useUserAuth()
   const [name, setName] = useState('')
+  const [companyName, setCompanyName] = useState('')
+  const [website, setWebsite] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [busy, setBusy] = useState(false)
@@ -26,7 +28,7 @@ export function UserRegisterPage() {
     setBusy(true)
     setError(null)
     try {
-      await register({ name, email, password })
+      await register({ name, companyName, website, email, password })
       nav(redirectTo, { replace: true })
     } finally {
       setBusy(false)
@@ -49,6 +51,18 @@ export function UserRegisterPage() {
 
           <form onSubmit={onSubmit} className="mt-6 grid gap-4">
             <Input label="Name" value={name} onChange={(e) => setName(e.target.value)} required />
+            <Input
+              label="Company name"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              required
+            />
+            <Input
+              label="Website (optional)"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              placeholder="https://example.com"
+            />
             <Input
               label="Email"
               type="email"
@@ -79,4 +93,3 @@ export function UserRegisterPage() {
     </div>
   )
 }
-

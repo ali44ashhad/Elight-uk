@@ -3,7 +3,7 @@
  * All backend calls go through this module.
  */
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'https://elight-uk.vercel.app';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 let authToken = null;
 let userAuthToken = null;

@@ -71,10 +71,8 @@ export function HomePage() {
   const [investorsLoungeSuccess, setInvestorsLoungeSuccess] = useState(false)
   const [investorsLoungeForm, setInvestorsLoungeForm] = useState({
     fullName: '',
-    companyName: '',
     mobileNumber: '',
     emailAddress: '',
-    website: '',
     terms: [],
   })
 
@@ -139,36 +137,20 @@ export function HomePage() {
     setInvestorsLoungeSuccess(false)
 
     const fullName = String(investorsLoungeForm.fullName || '').trim()
-    const companyName = String(investorsLoungeForm.companyName || '').trim()
     const mobileNumber = String(investorsLoungeForm.mobileNumber || '').trim()
     const emailAddress = String(investorsLoungeForm.emailAddress || '').trim()
-    const website = String(investorsLoungeForm.website || '').trim()
     const terms = Array.isArray(investorsLoungeForm.terms) ? investorsLoungeForm.terms : []
 
-    if (!fullName || !companyName || !mobileNumber || !emailAddress) {
-      setInvestorsLoungeError('Full Name, Company Name, Mobile Number, and Email Address are required.')
+    if (!fullName || !mobileNumber || !emailAddress) {
+      setInvestorsLoungeError('Full Name, Mobile Number, and Email Address are required.')
       return
     }
 
     setInvestorsLoungeSubmitting(true)
     try {
-      await api.createInvestorsLoungeSubmission({
-        fullName,
-        companyName,
-        mobileNumber,
-        emailAddress,
-        website,
-        terms,
-      })
+      await api.createInvestorsLoungeSubmission({ fullName, mobileNumber, emailAddress, terms })
       setInvestorsLoungeSuccess(true)
-      setInvestorsLoungeForm({
-        fullName: '',
-        companyName: '',
-        mobileNumber: '',
-        emailAddress: '',
-        website: '',
-        terms: [],
-      })
+      setInvestorsLoungeForm({ fullName: '', mobileNumber: '', emailAddress: '', terms: [] })
       window.setTimeout(() => setInvestorsLoungeOpen(false), 800)
     } catch (err) {
       setInvestorsLoungeError(err?.message || 'Failed to submit. Please try again.')
@@ -576,12 +558,6 @@ export function HomePage() {
                     className="w-full rounded-lg border border-emerald-400 bg-transparent px-4 py-3 text-white placeholder:text-slate-400 focus:border-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                   />
                   <input
-                    value={investorsLoungeForm.companyName}
-                    onChange={(e) => setInvestorsLoungeForm((s) => ({ ...s, companyName: e.target.value }))}
-                    placeholder="Company Name"
-                    className="w-full rounded-lg border border-emerald-400 bg-transparent px-4 py-3 text-white placeholder:text-slate-400 focus:border-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-                  />
-                  <input
                     value={investorsLoungeForm.mobileNumber}
                     onChange={(e) => setInvestorsLoungeForm((s) => ({ ...s, mobileNumber: e.target.value }))}
                     placeholder="Mobile Number"
@@ -591,12 +567,6 @@ export function HomePage() {
                     value={investorsLoungeForm.emailAddress}
                     onChange={(e) => setInvestorsLoungeForm((s) => ({ ...s, emailAddress: e.target.value }))}
                     placeholder="Email Address"
-                    className="w-full rounded-lg border border-emerald-400 bg-transparent px-4 py-3 text-white placeholder:text-slate-400 focus:border-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-                  />
-                  <input
-                    value={investorsLoungeForm.website}
-                    onChange={(e) => setInvestorsLoungeForm((s) => ({ ...s, website: e.target.value }))}
-                    placeholder="Website (optional)"
                     className="w-full rounded-lg border border-emerald-400 bg-transparent px-4 py-3 text-white placeholder:text-slate-400 focus:border-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
                   />
                 </div>

@@ -120,7 +120,7 @@ export function AdminUsersPage() {
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') applySearch()
                 }}
-                placeholder="e.g. jamie@…"
+                placeholder="e.g. name, company, email…"
               />
               <Button type="button" variant="secondary" className="w-full sm:w-auto" onClick={applySearch}>
                 Search
@@ -164,7 +164,22 @@ export function AdminUsersPage() {
                   <tr key={id} className="text-slate-800">
                     <td className="px-4 py-3">
                       <div className="font-semibold text-slate-900">{row?.name || '—'}</div>
+                      {row?.companyName ? (
+                        <div className="mt-0.5 text-slate-700">{row.companyName}</div>
+                      ) : null}
                       <div className="mt-0.5 text-slate-600">{row?.email || '—'}</div>
+                      {row?.website ? (
+                        <div className="mt-0.5 break-all text-slate-500">
+                          <a
+                            href={row.website.startsWith('http') ? row.website : `https://${row.website}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-emerald-700 hover:underline"
+                          >
+                            {row.website}
+                          </a>
+                        </div>
+                      ) : null}
                     </td>
                     <td className="px-4 py-3">{providerPill(row?.providerStatus)}</td>
                     <td className="px-4 py-3">

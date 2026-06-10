@@ -11,11 +11,14 @@ function normalizeEmail(email) {
 }
 
 export async function register(req, res) {
-  const { name, email, password } = req.body || {};
+  const { name, companyName, website, email, password } = req.body || {};
   const normalizedEmail = normalizeEmail(email);
 
   if (!name || !String(name).trim()) {
     return res.status(400).json({ error: 'Name is required' });
+  }
+  if (!companyName || !String(companyName).trim()) {
+    return res.status(400).json({ error: 'Company name is required' });
   }
   if (!normalizedEmail) {
     return res.status(400).json({ error: 'Email is required' });
@@ -32,6 +35,8 @@ export async function register(req, res) {
   const passwordHash = await bcrypt.hash(String(password), 10);
   const user = await User.create({
     name: String(name).trim(),
+    companyName: String(companyName).trim(),
+    website: website ? String(website).trim() : '',
     email: normalizedEmail,
     passwordHash,
   });
