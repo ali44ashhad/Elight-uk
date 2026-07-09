@@ -48,6 +48,7 @@ export async function request(method, path, options = {}) {
     headers.Authorization = `Bearer ${userAuthToken}`;
   }
 
+  /** @type {RequestInit & { headers: Record<string, string> }} */
   const config = {
     method,
     headers,
@@ -229,6 +230,7 @@ export function providerUploadPropertyImages(propertyId, formData) {
       // ignore non-JSON responses
     }
     if (!res.ok) {
+      /** @type {Error & { status?: number, data?: unknown }} */
       const err = new Error(data?.error || res.statusText || 'Upload failed')
       err.status = res.status
       err.data = data

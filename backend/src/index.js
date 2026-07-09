@@ -26,14 +26,14 @@ import { runFourteenDayCron } from './jobs/fourteenDayCron.js';
 const app = express();
 const PORT = Number(process.env.PORT) || 4000;
 
-const allowedOrigins = [
-  'https://elight-uk-393r.vercel.app', // production frontend
-  'https://globcalproperties.co.uk',
-  'https://www.globcalproperties.co.uk',
-  'http://localhost:5173',             // Vite dev
-  'http://localhost:5174',             // Vite dev
-  'http://localhost:3000',             // optional
-];
+// const allowedOrigins = [
+//   'https://elight-uk-393r.vercel.app', // production frontend
+//   'https://globcalproperties.co.uk',
+//   'https://www.globcalproperties.co.uk',
+//   'http://localhost:5173',             // Vite dev
+//   'http://localhost:5174',             // Vite dev
+//   'http://localhost:3000',             // optional
+// ];
 
 // app.use(
 //   cors({
@@ -43,14 +43,22 @@ const allowedOrigins = [
 //     credentials: false,
 //   })
 // );
-app.use(cors({
-  origin: true
-}));
-app.use(express.json());
 app.use((req, res, next) => {
-  console.log("Origin:", req.headers.origin);
+  const origin = req.headers.origin;
+
+  res.header("Access-Control-Allow-Origin", origin);
+  res.header("Vary", "Origin");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+
   next();
 });
+app.use(express.json());
+
 // Public API
 app.use('/api/auth', auth);
 app.use('/api/provider', provider);
