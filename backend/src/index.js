@@ -35,16 +35,22 @@ const allowedOrigins = [
   'http://localhost:3000',             // optional
 ];
 
-app.use(
-  cors({
-    origin: allowedOrigins,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: false,
-  })
-);
+// app.use(
+//   cors({
+//     origin: allowedOrigins,
+//     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+//     allowedHeaders: ['Content-Type', 'Authorization'],
+//     credentials: false,
+//   })
+// );
+app.use(cors({
+  origin: true
+}));
 app.use(express.json());
-
+app.use((req, res, next) => {
+  console.log("Origin:", req.headers.origin);
+  next();
+});
 // Public API
 app.use('/api/auth', auth);
 app.use('/api/provider', provider);
