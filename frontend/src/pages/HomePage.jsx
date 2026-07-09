@@ -182,11 +182,11 @@ export function HomePage() {
           <div className="relative flex min-h-screen flex-col">
             <div className="flex flex-1 items-center justify-center">
               <div className="relative mx-auto max-w-7xl px-4 text-center"> 
-                <div className="mb-6 inline-flex items-center rounded-full border border-white/20 bg-white/5 px-4 py-1.5 backdrop-blur-sm">
+                {/* <div className="mb-6 inline-flex items-center rounded-full border border-white/20 bg-white/5 px-4 py-1.5 backdrop-blur-sm">
                   <span className="flex h-2 w-2 animate-pulse rounded-full bg-emerald-400 mr-2" />
                   <span className="text-xs font-medium tracking-wider text-white/90">PREMIUM PROPERTY PARTNER</span>
-                </div>
- 
+                </div> */}
+{/*  
                 <h1 className="animate-[fadeIn_0.8s_ease-out] text-4xl font-light tracking-tight text-white sm:text-4xl lg:text-6xl">
                   <span className="block font-bold">Explore the latest property deals with us in</span>
                   <span className="mt-2 block bg-gradient-to-r from-emerald-300 via-white to-emerald-300 bg-clip-text text-transparent">
@@ -197,7 +197,7 @@ export function HomePage() {
                 England, Scotland, and Wales Plus Northern Ireland
 
                 </p>
- 
+  */}
                 <div className="mt-8" />
               </div>
             </div>

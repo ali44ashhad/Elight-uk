@@ -29,6 +29,7 @@ const PORT = Number(process.env.PORT) || 4000;
 const allowedOrigins = [
   'https://elight-uk-393r.vercel.app', // production frontend
   'https://globcalproperties.co.uk',
+  'https://www.globcalproperties.co.uk',
   'http://localhost:5173',             // Vite dev
   'http://localhost:5174',             // Vite dev
   'http://localhost:3000',             // optional
