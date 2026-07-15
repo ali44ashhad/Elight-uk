@@ -25,6 +25,7 @@ export async function createProperty(req, res) {
     title,
     location,
     monthlyRent,
+    billsAmount,
     expectedProfit,
     roi,
     investmentAmount,
@@ -44,6 +45,7 @@ export async function createProperty(req, res) {
     title: String(title).trim(),
     location: String(location).trim(),
     monthlyRent: Number(monthlyRent),
+    billsAmount: billsAmount != null && billsAmount !== '' ? Number(billsAmount) : undefined,
     expectedProfit: expectedProfit != null ? Number(expectedProfit) : undefined,
     roi: roi != null ? Number(roi) : undefined,
     investmentAmount: Number(investmentAmount),
@@ -111,6 +113,7 @@ export async function updateProperty(req, res) {
     title,
     location,
     monthlyRent,
+    billsAmount,
     expectedProfit,
     roi,
     investmentAmount,
@@ -126,6 +129,7 @@ export async function updateProperty(req, res) {
   if (title !== undefined) data.title = String(title).trim();
   if (location !== undefined) data.location = String(location).trim();
   if (monthlyRent !== undefined) data.monthlyRent = Number(monthlyRent);
+  if (billsAmount !== undefined) data.billsAmount = billsAmount == null || billsAmount === '' ? null : Number(billsAmount);
   if (expectedProfit !== undefined) data.expectedProfit = expectedProfit == null ? null : Number(expectedProfit);
   if (roi !== undefined) data.roi = roi == null ? null : Number(roi);
   if (investmentAmount !== undefined) data.investmentAmount = Number(investmentAmount);

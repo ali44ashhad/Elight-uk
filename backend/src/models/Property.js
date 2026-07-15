@@ -19,6 +19,7 @@ const propertySchema = new mongoose.Schema(
     title: { type: String, required: true },
     location: { type: String, required: true },
     monthlyRent: { type: Number, required: true },
+    billsAmount: Number,
     expectedProfit: Number,
     roi: Number,
     investmentAmount: { type: Number, required: true },

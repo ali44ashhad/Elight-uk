@@ -59,6 +59,7 @@ export async function createProviderProperty(req, res) {
     title,
     location,
     monthlyRent,
+    billsAmount,
     expectedProfit,
     roi,
     investmentAmount,
@@ -75,6 +76,7 @@ export async function createProviderProperty(req, res) {
     title: String(title).trim(),
     location: String(location).trim(),
     monthlyRent: Number(monthlyRent),
+    billsAmount: billsAmount != null && billsAmount !== '' ? Number(billsAmount) : undefined,
     expectedProfit: expectedProfit != null ? Number(expectedProfit) : undefined,
     roi: roi != null ? Number(roi) : undefined,
     investmentAmount: Number(investmentAmount),
@@ -114,6 +116,7 @@ export async function updateProviderProperty(req, res) {
     title,
     location,
     monthlyRent,
+    billsAmount,
     expectedProfit,
     roi,
     investmentAmount,
@@ -125,6 +128,7 @@ export async function updateProviderProperty(req, res) {
   if (title !== undefined) property.title = String(title).trim();
   if (location !== undefined) property.location = String(location).trim();
   if (monthlyRent !== undefined) property.monthlyRent = Number(monthlyRent);
+  if (billsAmount !== undefined) property.billsAmount = billsAmount == null || billsAmount === '' ? null : Number(billsAmount);
   if (expectedProfit !== undefined) property.expectedProfit = expectedProfit == null ? null : Number(expectedProfit);
   if (roi !== undefined) property.roi = roi == null ? null : Number(roi);
   if (investmentAmount !== undefined) property.investmentAmount = Number(investmentAmount);

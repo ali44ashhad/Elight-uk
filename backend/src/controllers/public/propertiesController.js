@@ -27,7 +27,7 @@ export async function listProperties(req, res) {
   // Featured grid doesn't need tenancy details; keep response small/fast.
   baseQuery
     .select(
-      'title location monthlyRent expectedProfit roi investmentAmount status soldAt underOfferUntil images seller createdAt updatedAt statusRank highlights'
+      'title location monthlyRent billsAmount expectedProfit roi investmentAmount status soldAt underOfferUntil images seller createdAt updatedAt statusRank highlights'
     )
     .populate({
       path: 'seller',

@@ -70,6 +70,7 @@ export async function request(method, path, options = {}) {
   }
 
   if (!res.ok) {
+    /** @type {Error & { status?: number, data?: unknown }} */
     const err = new Error(data?.error || res.statusText || 'Request failed');
     err.status = res.status;
     err.data = data;
@@ -161,6 +162,7 @@ export function userChangePassword(body) {
 /** POST /api/auth/me/image — FormData with 'image' file */
 export function userUploadMeImage(formData) {
   const url = `${BASE_URL}/api/auth/me/image`
+  /** @type {Record<string, string>} */
   const headers = {}
   if (userAuthToken) headers.Authorization = `Bearer ${userAuthToken}`
   return fetch(url, {
@@ -176,6 +178,7 @@ export function userUploadMeImage(formData) {
       // ignore non-JSON
     }
     if (!res.ok) {
+      /** @type {Error & { status?: number, data?: unknown }} */
       const err = new Error(data?.error || res.statusText || 'Upload failed')
       err.status = res.status
       err.data = data
@@ -215,6 +218,7 @@ export function providerCreateProperty(body) {
 /** POST /api/provider/properties/:id/images — FormData with 'images' file(s) */
 export function providerUploadPropertyImages(propertyId, formData) {
   const url = `${BASE_URL}/api/provider/properties/${propertyId}/images`
+  /** @type {Record<string, string>} */
   const headers = {}
   if (userAuthToken) headers.Authorization = `Bearer ${userAuthToken}`
   return fetch(url, {
@@ -306,6 +310,7 @@ export function deleteProperty(id) {
 /** POST /api/admin/properties/:id/images — FormData with 'images' file(s) */
 export function uploadPropertyImages(propertyId, formData) {
   const url = `${BASE_URL}/api/admin/properties/${propertyId}/images`;
+  /** @type {Record<string, string>} */
   const headers = {};
   if (authToken) headers.Authorization = `Bearer ${authToken}`;
   return fetch(url, {
@@ -321,6 +326,7 @@ export function uploadPropertyImages(propertyId, formData) {
       // ignore non-JSON responses
     }
     if (!res.ok) {
+      /** @type {Error & { status?: number, data?: unknown }} */
       const err = new Error(data?.error || res.statusText || 'Upload failed');
       err.status = res.status;
       err.data = data;
@@ -376,6 +382,7 @@ export function patchAdminUser(id, body) {
 /** POST /api/admin/sellers/:id/image — FormData with 'image' file */
 export function uploadSellerImage(sellerId, formData) {
   const url = `${BASE_URL}/api/admin/sellers/${sellerId}/image`;
+  /** @type {Record<string, string>} */
   const headers = {};
   if (authToken) headers.Authorization = `Bearer ${authToken}`;
   return fetch(url, {
@@ -391,6 +398,7 @@ export function uploadSellerImage(sellerId, formData) {
       // ignore non-JSON responses
     }
     if (!res.ok) {
+      /** @type {Error & { status?: number, data?: unknown }} */
       const err = new Error(data?.error || res.statusText || 'Upload failed');
       err.status = res.status;
       err.data = data;

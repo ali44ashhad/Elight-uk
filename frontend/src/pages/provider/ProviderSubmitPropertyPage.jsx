@@ -37,6 +37,7 @@ export function ProviderSubmitPropertyPage() {
   const [title, setTitle] = useState('')
   const [location, setLocation] = useState('')
   const [monthlyRent, setMonthlyRent] = useState('')
+  const [billsAmount, setBillsAmount] = useState('')
   const [investmentAmount, setInvestmentAmount] = useState('')
   const [expectedProfit, setExpectedProfit] = useState('')
   const [roi, setRoi] = useState('')
@@ -132,6 +133,7 @@ export function ProviderSubmitPropertyPage() {
         details,
         highlights,
       }
+      if (billsAmount.trim()) body.billsAmount = Number(billsAmount)
       if (expectedProfit.trim()) body.expectedProfit = Number(expectedProfit)
       if (roi.trim()) body.roi = Number(roi)
       if (tenancyDetails.trim()) body.tenancyDetails = tenancyDetails.trim()
@@ -208,6 +210,18 @@ export function ProviderSubmitPropertyPage() {
                   required
                 />
                 <Input
+                  label="Bills (optional)"
+                  type="number"
+                  min="0"
+                  step="1"
+                  value={billsAmount}
+                  onChange={(e) => setBillsAmount(e.target.value)}
+                  placeholder="e.g. 350"
+                />
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Input
                   label="Investment amount"
                   type="number"
                   min="0"
@@ -216,15 +230,15 @@ export function ProviderSubmitPropertyPage() {
                   onChange={(e) => setInvestmentAmount(e.target.value)}
                   required
                 />
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-2">
                 <Input
                   label="Expected profit (optional)"
                   type="number"
                   value={expectedProfit}
                   onChange={(e) => setExpectedProfit(e.target.value)}
                 />
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
                 <Input label="ROI % (optional)" type="number" value={roi} onChange={(e) => setRoi(e.target.value)} />
               </div>
 

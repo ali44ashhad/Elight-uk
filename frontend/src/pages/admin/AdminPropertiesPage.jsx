@@ -66,6 +66,7 @@ export function AdminPropertiesPage() {
     title: '',
     location: '',
     monthlyRent: '',
+    billsAmount: '',
     investmentAmount: '',
     expectedProfit: '',
     roi: '',
@@ -143,6 +144,8 @@ export function AdminPropertiesPage() {
       if (!body.title || !body.location || Number.isNaN(body.monthlyRent) || Number.isNaN(body.investmentAmount)) {
         throw new Error('Title, location, monthly rent and investment amount are required')
       }
+      if (createForm.billsAmount.trim()) body.billsAmount = Number(createForm.billsAmount)
+      else if (editingId) body.billsAmount = null
       if (createForm.expectedProfit.trim()) body.expectedProfit = Number(createForm.expectedProfit)
       if (createForm.roi.trim()) body.roi = Number(createForm.roi)
       if (createForm.tenancyDetails.trim()) body.tenancyDetails = createForm.tenancyDetails.trim()
@@ -174,6 +177,7 @@ export function AdminPropertiesPage() {
         title: '',
         location: '',
         monthlyRent: '',
+        billsAmount: '',
         investmentAmount: '',
         expectedProfit: '',
         roi: '',
@@ -285,6 +289,7 @@ export function AdminPropertiesPage() {
                       title: '',
                       location: '',
                       monthlyRent: '',
+                      billsAmount: '',
                       investmentAmount: '',
                       expectedProfit: '',
                       roi: '',
@@ -321,6 +326,7 @@ export function AdminPropertiesPage() {
                     title: '',
                     location: '',
                     monthlyRent: '',
+                    billsAmount: '',
                     investmentAmount: '',
                     expectedProfit: '',
                     roi: '',
@@ -363,7 +369,7 @@ export function AdminPropertiesPage() {
               required
             />
           </div>
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <Input
               label="Monthly rent"
               type="number"
@@ -371,6 +377,14 @@ export function AdminPropertiesPage() {
               value={createForm.monthlyRent}
               onChange={(e) => setCreateForm((f) => ({ ...f, monthlyRent: e.target.value }))}
               required
+            />
+            <Input
+              label="Bills (optional)"
+              type="number"
+              min="0"
+              value={createForm.billsAmount}
+              onChange={(e) => setCreateForm((f) => ({ ...f, billsAmount: e.target.value }))}
+              placeholder="e.g. 350"
             />
             <Input
               label="Investment amount"
@@ -706,6 +720,10 @@ export function AdminPropertiesPage() {
                               monthlyRent:
                                 p?.monthlyRent != null && !Number.isNaN(Number(p.monthlyRent))
                                   ? String(p.monthlyRent)
+                                  : '',
+                              billsAmount:
+                                p?.billsAmount != null && !Number.isNaN(Number(p.billsAmount))
+                                  ? String(p.billsAmount)
                                   : '',
                               investmentAmount:
                                 p?.investmentAmount != null && !Number.isNaN(Number(p.investmentAmount))
