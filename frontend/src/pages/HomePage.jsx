@@ -7,6 +7,9 @@ import { Header } from '../components/Layout/Header'
 import heroVideo from '../assets/hero.mp4'
 import logo from '../assets/logo.png' 
 
+/**
+ * @param {{ end: number, durationMs?: number, suffix?: string }} props
+ */
 function AnimatedNumber({ end, durationMs = 1400, suffix = '' }) {
   const ref = useRef(null)
   const [value, setValue] = useState(0)
@@ -29,6 +32,7 @@ function AnimatedNumber({ end, durationMs = 1400, suffix = '' }) {
       }
 
       const startTs = performance.now()
+      /** @param {number} now */
       const tick = (now) => {
         const t = Math.min(1, (now - startTs) / durationMs)
         const eased = 1 - Math.pow(1 - t, 3)
@@ -61,24 +65,24 @@ function AnimatedNumber({ end, durationMs = 1400, suffix = '' }) {
 }
 
 export function HomePage() {
-  const [featured, setFeatured] = useState([])
+  const [featured, setFeatured] = useState(/** @type {any[]} */ ([]))
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(null)
   const [isMailchimpOpen, setIsMailchimpOpen] = useState(false)
   const [investorsLoungeOpen, setInvestorsLoungeOpen] = useState(false)
   const [investorsLoungeSubmitting, setInvestorsLoungeSubmitting] = useState(false)
-  const [investorsLoungeError, setInvestorsLoungeError] = useState(null)
+  const [investorsLoungeError, setInvestorsLoungeError] = useState(/** @type {string | null} */ (null))
   const [investorsLoungeSuccess, setInvestorsLoungeSuccess] = useState(false)
   const [investorsLoungeForm, setInvestorsLoungeForm] = useState({
     fullName: '',
     mobileNumber: '',
     emailAddress: '',
-    terms: [],
+    terms: /** @type {string[]} */ ([]),
   })
 
   useEffect(() => {
     if (!investorsLoungeOpen) return
-    const onKeyDown = (e) => {
+    const onKeyDown = (/** @type {KeyboardEvent} */ e) => {
       if (e.key === 'Escape') setInvestorsLoungeOpen(false)
     }
     window.addEventListener('keydown', onKeyDown)
@@ -130,7 +134,7 @@ export function HomePage() {
     }
   }
 
-  async function submitInvestorsLounge(e) {
+  async function submitInvestorsLounge(/** @type {import('react').FormEvent<HTMLFormElement>} */ e) {
     e.preventDefault()
     if (investorsLoungeSubmitting) return
     setInvestorsLoungeError(null)
@@ -153,7 +157,8 @@ export function HomePage() {
       setInvestorsLoungeForm({ fullName: '', mobileNumber: '', emailAddress: '', terms: [] })
       window.setTimeout(() => setInvestorsLoungeOpen(false), 800)
     } catch (err) {
-      setInvestorsLoungeError(err?.message || 'Failed to submit. Please try again.')
+      const message = err instanceof Error ? err.message : null
+      setInvestorsLoungeError(message || 'Failed to submit. Please try again.')
     } finally {
       setInvestorsLoungeSubmitting(false)
     }
@@ -182,11 +187,11 @@ export function HomePage() {
           <div className="relative flex min-h-screen flex-col">
             <div className="flex flex-1 items-center justify-center">
               <div className="relative mx-auto max-w-7xl px-4 text-center"> 
-                {/* <div className="mb-6 inline-flex items-center rounded-full border border-white/20 bg-white/5 px-4 py-1.5 backdrop-blur-sm">
+                <div className="mb-6 inline-flex items-center rounded-full border border-white/20 bg-white/5 px-4 py-1.5 backdrop-blur-sm">
                   <span className="flex h-2 w-2 animate-pulse rounded-full bg-emerald-400 mr-2" />
                   <span className="text-xs font-medium tracking-wider text-white/90">PREMIUM PROPERTY PARTNER</span>
-                </div> */}
-{/*  
+                </div>
+ 
                 <h1 className="animate-[fadeIn_0.8s_ease-out] text-4xl font-light tracking-tight text-white sm:text-4xl lg:text-6xl">
                   <span className="block font-bold">Explore the latest property deals with us in</span>
                   <span className="mt-2 block bg-gradient-to-r from-emerald-300 via-white to-emerald-300 bg-clip-text text-transparent">
@@ -195,9 +200,7 @@ export function HomePage() {
                 </h1> 
                 <p className="mx-auto mt-6 max-w-2xl animate-[fadeIn_1s_ease-out] text-lg text-white/80">
                 England, Scotland, and Wales Plus Northern Ireland
-
                 </p>
-  */}
                 <div className="mt-8" />
               </div>
             </div>

@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom'
 import { Card } from '../ui/Card'
 import logo from '../../assets/logo.png'
 
+/**
+ * @param {string | number | null | undefined} n
+ * @returns {string}
+ */
 function formatMoney(n) {
   if (n == null || Number.isNaN(Number(n))) return '—'
   try {
@@ -16,6 +20,10 @@ function formatMoney(n) {
   }
 }
 
+/**
+ * @param {any} property
+ * @returns {string}
+ */
 function getEffectiveStatus(property) {
   const raw = property?.status || 'Available'
   const until = property?.underOfferUntil ? new Date(property.underOfferUntil) : null
@@ -26,6 +34,10 @@ function getEffectiveStatus(property) {
   return raw
 }
 
+/**
+ * @param {any} property
+ * @returns {string | null}
+ */
 function getUnderOfferCountdown(property) {
   const until = property?.underOfferUntil ? new Date(property.underOfferUntil) : null
   if (!until) return null
@@ -49,12 +61,16 @@ function getUnderOfferCountdown(property) {
   return `${parts.join(' ')} left`
 }
 
+/**
+ * @param {any} property
+ * @returns {React.ReactNode}
+ */
 function OpportunityCard({ property }) {
   const images = property?.images || []
-  const imgUrls = images.map((im) => im?.secureUrl || im?.url).filter(Boolean)
+  const imgUrls = images.map((/** @type {any} */ im) => im?.secureUrl || im?.url).filter(Boolean)
   const [hovered, setHovered] = useState(false)
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [nowTick, setNowTick] = useState(() => Date.now())
+  const [, setNowTick] = useState(() => Date.now())
 
   useEffect(() => {
     if (!hovered || imgUrls.length <= 1) return
@@ -128,7 +144,7 @@ function OpportunityCard({ property }) {
           {/* Hover carousel dots (auto-rotates on hover) */}
           {imgUrls.length > 1 && (
             <div className="pointer-events-none absolute bottom-2 left-1/2 flex -translate-x-1/2 gap-1">
-              {imgUrls.map((_, i) => (
+              {imgUrls.map((/** @type {string | undefined} */ _, /** @type {number} */ i) => (
                 <span
                   key={i}
                   className={`h-1.5 w-1.5 rounded-full ${
@@ -195,10 +211,10 @@ function OpportunityCard({ property }) {
         {Array.isArray(property?.highlights) && property.highlights.filter(Boolean).length > 0 ? (
           <div className="mt-3 flex flex-wrap items-center gap-3 text-[0.72rem] text-slate-600">
             {property.highlights
-              .map((x) => (x == null ? '' : String(x).trim()))
+              .map((/** @type {string | null | undefined} */ x) => (x == null ? '' : String(x).trim()))
               .filter(Boolean)
               .slice(0, 10)
-              .map((h) => (
+              .map((/** @type {string} */ h) => (
                 <span key={h}>{h}</span>
               ))}
           </div>
@@ -209,6 +225,9 @@ function OpportunityCard({ property }) {
   )
 }
 
+/**
+ * @param {{ page: number, totalPages: number, onPageChange: (page: number) => void }} props
+ */
 function Pagination({ page, totalPages, onPageChange }) {
   const pages = useMemo(() => {
     const n = Math.max(1, Number(totalPages) || 1)
@@ -239,12 +258,15 @@ function Pagination({ page, totalPages, onPageChange }) {
   )
 }
 
+/**
+ * @param {{ featured?: any[], loading?: boolean, loadError?: string | null }} props
+ */
 export function FeaturedOpportunity({ featured = [], loading, loadError }) {
   const [page, setPage] = useState(1)
   const pageSize = 3
 
   const orderedFeatured = useMemo(() => {
-    const rank = (p) => {
+    const rank = (/** @type {any} */ p) => {
       const s = getEffectiveStatus(p)
       if (s === 'Available') return 0
       if (s === 'UnderOffer') return 1
@@ -280,7 +302,9 @@ export function FeaturedOpportunity({ featured = [], loading, loadError }) {
         {loading ? (
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 3 }).map((_, i) => (
-              <Card key={i} className="h-80 animate-pulse rounded-[26px] bg-slate-100" />
+              <Card key={i} className="h-80 animate-pulse rounded-[26px] bg-slate-100">
+                <div className="h-full w-full animate-pulse rounded-[26px] bg-slate-100" />
+              </Card>
             ))}
           </div>
         ) : loadError ? (
