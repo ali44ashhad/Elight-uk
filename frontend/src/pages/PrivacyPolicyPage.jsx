@@ -167,7 +167,7 @@ export function PrivacyPolicyPage() {
                 Registered Office: 2nd Floor College House, 17 King Edwards Road, Ruislip, London, United Kingdom,
                 HA4 7AE
               </p>
-              <p>Email: [privacy@glocalproperties.co.uk]</p>
+              <p>Email: ico@globcalproperties.co.uk</p>
             </div>
           </div>
 

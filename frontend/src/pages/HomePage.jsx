@@ -179,7 +179,7 @@ export function HomePage() {
             >
               <source src={heroVideo} type="video/mp4" />
             </video> 
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-900/95 via-slate-900/80 to-emerald-900/70" />
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-900/95 via-slate-900/40 to-emerald-900/30 " />
              
             <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-emerald-500/20 blur-3xl animate-pulse" />
             <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-blue-500/20 blur-3xl animate-pulse delay-1000" />
@@ -239,7 +239,7 @@ export function HomePage() {
                   </button>
                 </div>
                 <div className="max-h-[75vh] overflow-auto p-5">
-                  <p className="text-sm text-slate-600">
+                  <p className="text-sm text-slate-600"> 
                   Get Access to High-Yield Property Deals Before They Hit the Market. Enter your details below.
                   </p>
 
