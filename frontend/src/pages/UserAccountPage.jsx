@@ -9,6 +9,7 @@ import { Textarea } from '../components/ui/Textarea'
 import { useUserAuth } from '../contexts/UserAuthContext'
 import * as api from '../api'
 import { openCloudinaryPdf } from '../utils/cloudinaryPdf'
+import coDealAgreementPdf from '../assets/Co-Deal-Sourcing-Agreement.pdf?url'
 
 /**
  * @typedef {{
@@ -48,6 +49,7 @@ export function UserAccountPage() {
   const [provider, setProvider] = useState(/** @type {ProviderMe | null} */ (null))
   const [applyMessage, setApplyMessage] = useState('')
   const [applyAddress, setApplyAddress] = useState('')
+  const [acceptTerms, setAcceptTerms] = useState(false)
   const [busyApply, setBusyApply] = useState(false)
   const [error, setError] = useState(/** @type {string | null} */ (null))
 
@@ -100,6 +102,10 @@ export function UserAccountPage() {
   async function onApplyProvider() {
     if (!applyAddress.trim()) {
       setError('Address is required')
+      return
+    }
+    if (!acceptTerms) {
+      setError('Please accept the terms and conditions')
       return
     }
     setBusyApply(true)
@@ -371,8 +377,33 @@ export function UserAccountPage() {
                         onChange={(e) => setApplyMessage(e.target.value)}
                         placeholder="Tell us about your properties…"
                       />
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                        <label className="flex items-start gap-2 text-sm text-teal-800">
+                          <input
+                            type="checkbox"
+                            checked={acceptTerms}
+                            onChange={(e) => setAcceptTerms(e.target.checked)}
+                            className="mt-0.5 h-4 w-4 rounded border-teal-300 text-teal-700 focus:ring-teal-600"
+                          />
+                          <span>
+                            I have read and agree to the terms and conditions
+                            <span className="text-rose-600"> *</span>
+                          </span>
+                        </label>
+                        <a
+                          href={coDealAgreementPdf}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-sm font-semibold text-teal-700 underline underline-offset-2 hover:text-teal-900"
+                        >
+                          View terms and conditions
+                        </a>
+                      </div>
                       <div className="flex items-center gap-3">
-                        <Button onClick={onApplyProvider} disabled={busyApply || !applyAddress.trim()}>
+                        <Button
+                          onClick={onApplyProvider}
+                          disabled={busyApply || !applyAddress.trim() || !acceptTerms}
+                        >
                           {busyApply ? 'Submitting…' : 'Apply'}
                         </Button>
                         <span className="text-xs text-slate-500">Admin will review your request.</span>
