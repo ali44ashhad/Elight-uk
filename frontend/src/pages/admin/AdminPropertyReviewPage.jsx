@@ -4,6 +4,36 @@ import * as api from '../../api'
 import { Card } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
 
+/**
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   url?: string,
+ *   secureUrl?: string,
+ * }} AdminPropertyImage
+ *
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   title?: string,
+ *   location?: string,
+ *   moderationStatus?: string,
+ *   monthlyRent?: number,
+ *   investmentAmount?: number,
+ *   expectedProfit?: number,
+ *   roi?: number,
+ *   tenancyDetails?: string,
+ *   details?: string,
+ *   highlights?: string[],
+ *   images?: AdminPropertyImage[],
+ *   createdByUser?: string | null,
+ *   seller?: { name?: string } | null,
+ * }} AdminReviewProperty
+ */
+
+/**
+ * @param {unknown} n
+ */
 function formatMoney(n) {
   if (n == null || Number.isNaN(Number(n))) return '—'
   try {
@@ -17,6 +47,9 @@ function formatMoney(n) {
   }
 }
 
+/**
+ * @param {{ status?: string | null }} props
+ */
 function Pill({ status }) {
   const s = status || 'pending'
   const cls =
@@ -31,9 +64,9 @@ function Pill({ status }) {
 export function AdminPropertyReviewPage() {
   const { id } = useParams()
   const nav = useNavigate()
-  const [property, setProperty] = useState(null)
+  const [property, setProperty] = useState(/** @type {AdminReviewProperty | null} */ (null))
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(/** @type {string | null} */ (null))
   const [busy, setBusy] = useState(false)
 
   async function load() {
@@ -44,7 +77,8 @@ export function AdminPropertyReviewPage() {
       const data = await api.getAdminProperty(id)
       setProperty(data || null)
     } catch (e) {
-      setError(e?.message || 'Failed to load property')
+      const err = /** @type {{ message?: string }} */ (e)
+      setError(err?.message || 'Failed to load property')
     } finally {
       setLoading(false)
     }
@@ -57,9 +91,14 @@ export function AdminPropertyReviewPage() {
 
   const imgUrls = useMemo(() => {
     const images = property?.images || []
-    return images.map((im) => im?.secureUrl || im?.url).filter(Boolean)
+    return images
+      .map((im) => im?.secureUrl || im?.url)
+      .filter((u) => typeof u === 'string' && u.length > 0)
   }, [property])
 
+  /**
+   * @param {string} moderationStatus
+   */
   async function setModeration(moderationStatus) {
     if (!id) return
     setBusy(true)
@@ -68,7 +107,8 @@ export function AdminPropertyReviewPage() {
       await api.updateProperty(id, { moderationStatus })
       await load()
     } catch (e) {
-      setError(e?.message || 'Failed to update')
+      const err = /** @type {{ message?: string }} */ (e)
+      setError(err?.message || 'Failed to update')
     } finally {
       setBusy(false)
     }

@@ -2,6 +2,7 @@ import { ProviderApplication } from '../../models/ProviderApplication.js';
 import { User } from '../../models/User.js';
 import { Seller } from '../../models/Seller.js';
 import { withId } from '../../utils/mapId.js';
+import { ensureAgreementPdfUploaded, needsAgreementRebuild } from '../../lib/createProviderApplication.js';
 
 export async function listProviderApplications(req, res) {
   const status = req.query.status ? String(req.query.status) : '';
@@ -9,10 +10,19 @@ export async function listProviderApplications(req, res) {
 
   const apps = await ProviderApplication.find(filter)
     .sort({ status: 1, createdAt: -1 })
-    .populate('user', 'name email providerStatus')
-    .lean();
+    .populate('user', 'name email providerStatus companyName registeredNumber website address');
 
-  res.json(withId(apps));
+  await Promise.all(
+    apps
+      .filter((app) => needsAgreementRebuild(app))
+      .map((app) =>
+        ensureAgreementPdfUploaded(app, app.user).catch((e) => {
+          console.error('[agreement.ensure]', e);
+        })
+      )
+  );
+
+  res.json(withId(apps.map((app) => app.toObject({ virtuals: true }))));
 }
 
 export async function reviewProviderApplication(req, res) {
@@ -66,7 +76,9 @@ export async function reviewProviderApplication(req, res) {
 
   await Promise.all([app.save(), user.save()]);
 
-  const populated = await ProviderApplication.findById(app._id).populate('user', 'name email providerStatus').lean();
+  const populated = await ProviderApplication.findById(app._id)
+    .populate('user', 'name email providerStatus companyName registeredNumber website address')
+    .lean();
   res.json(withId(populated));
 }
 

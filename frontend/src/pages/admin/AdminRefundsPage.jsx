@@ -1,9 +1,29 @@
-import React,  { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { request } from '../../api'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { Input } from '../../components/ui/Input'
 
+/**
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   orderDate?: string,
+ *   dealPropertyAddress?: string,
+ *   purchaseEmail?: string,
+ *   cardLast4?: string,
+ *   reasonForRefund?: string,
+ *   reasonForRefunds?: string,
+ *   reasonForRefundsText?: string,
+ *   reasonForRefundText?: string,
+ *   reason?: string,
+ *   createdAt?: string | Date,
+ * }} AdminRefund
+ */
+
+/**
+ * @param {string | number | Date | null | undefined} d
+ */
 function formatDate(d) {
   if (!d) return '—'
   try {
@@ -13,6 +33,9 @@ function formatDate(d) {
   }
 }
 
+/**
+ * @param {{ title: string, subtitle?: string }} props
+ */
 function EmptyState({ title, subtitle }) {
   return (
     <Card className="p-6">
@@ -23,9 +46,9 @@ function EmptyState({ title, subtitle }) {
 }
 
 export function AdminRefundsPage() {
-  const [refunds, setRefunds] = useState([])
+  const [refunds, setRefunds] = useState(/** @type {AdminRefund[]} */ ([]))
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(/** @type {string | null} */ (null))
   const [filter, setFilter] = useState('')
 
   const filteredRefunds = useMemo(() => {
@@ -51,7 +74,8 @@ export function AdminRefundsPage() {
       const list = Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : []
       setRefunds(list)
     } catch (e) {
-      setError(e?.message || 'Failed to load refunds')
+      const err = /** @type {{ message?: string }} */ (e)
+      setError(err?.message || 'Failed to load refunds')
     } finally {
       setLoading(false)
     }

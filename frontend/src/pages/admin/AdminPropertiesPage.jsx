@@ -6,6 +6,65 @@ import { Input } from '../../components/ui/Input'
 import { RichTextEditor } from '../../components/ui/RichTextEditor'
 import { Textarea } from '../../components/ui/Textarea'
 
+/**
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   url?: string,
+ *   secureUrl?: string,
+ * }} AdminPropertyImage
+ *
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   title?: string,
+ *   location?: string,
+ *   status?: string,
+ *   monthlyRent?: number,
+ *   billsAmount?: number | null,
+ *   investmentAmount?: number,
+ *   expectedProfit?: number,
+ *   roi?: number,
+ *   tenancyDetails?: string,
+ *   details?: string,
+ *   highlights?: string[],
+ *   images?: AdminPropertyImage[],
+ *   updatedAt?: string | Date,
+ * }} AdminProperty
+ *
+ * @typedef {{
+ *   title: string,
+ *   location: string,
+ *   monthlyRent: string,
+ *   billsAmount: string,
+ *   investmentAmount: string,
+ *   expectedProfit: string,
+ *   roi: string,
+ *   tenancyDetails: string,
+ *   details: string,
+ *   highlights: string[],
+ *   customHighlight: string,
+ *   status: string,
+ * }} PropertyForm
+ *
+ * @typedef {{
+ *   title: string,
+ *   location: string,
+ *   monthlyRent: number,
+ *   investmentAmount: number,
+ *   billsAmount?: number | null,
+ *   expectedProfit?: number,
+ *   roi?: number,
+ *   tenancyDetails?: string,
+ *   status?: string,
+ *   details?: string,
+ *   highlights?: string[],
+ * }} PropertyWriteBody
+ */
+
+/**
+ * @param {unknown} n
+ */
 function formatMoney(n) {
   if (n == null || Number.isNaN(Number(n))) return '—'
   try {
@@ -19,6 +78,9 @@ function formatMoney(n) {
   }
 }
 
+/**
+ * @param {string | number | Date | null | undefined} d
+ */
 function formatDate(d) {
   if (!d) return '—'
   try {
@@ -28,6 +90,9 @@ function formatDate(d) {
   }
 }
 
+/**
+ * @param {{ title: string, subtitle?: string }} props
+ */
 function EmptyState({ title, subtitle }) {
   return (
     <Card className="p-6">
@@ -57,12 +122,7 @@ export function AdminPropertiesPage() {
     '🚇 Near station',
   ]
 
-  const [properties, setProperties] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [filter, setFilter] = useState('')
-
-  const [createForm, setCreateForm] = useState({
+  const emptyForm = /** @type {PropertyForm} */ ({
     title: '',
     location: '',
     monthlyRent: '',
@@ -76,16 +136,23 @@ export function AdminPropertiesPage() {
     customHighlight: '',
     status: 'Available',
   })
+
+  const [properties, setProperties] = useState(/** @type {AdminProperty[]} */ ([]))
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(/** @type {string | null} */ (null))
+  const [filter, setFilter] = useState('')
+
+  const [createForm, setCreateForm] = useState(emptyForm)
   const MAX_IMAGES = 10
-  const [createFiles, setCreateFiles] = useState([])
-  const [previewUrls, setPreviewUrls] = useState([])
+  const [createFiles, setCreateFiles] = useState(/** @type {File[]} */ ([]))
+  const [previewUrls, setPreviewUrls] = useState(/** @type {string[]} */ ([]))
   const [creatingProperty, setCreatingProperty] = useState(false)
-  const [createError, setCreateError] = useState(null)
-  const [createSuccess, setCreateSuccess] = useState(null)
-  const [deleteError, setDeleteError] = useState(null)
-  const [editingId, setEditingId] = useState(null)
-  const [editingImages, setEditingImages] = useState([])
-  const [deletingImageId, setDeletingImageId] = useState(null)
+  const [createError, setCreateError] = useState(/** @type {string | null} */ (null))
+  const [createSuccess, setCreateSuccess] = useState(/** @type {string | null} */ (null))
+  const [deleteError, setDeleteError] = useState(/** @type {string | null} */ (null))
+  const [editingId, setEditingId] = useState(/** @type {string | null} */ (null))
+  const [editingImages, setEditingImages] = useState(/** @type {AdminPropertyImage[]} */ ([]))
+  const [deletingImageId, setDeletingImageId] = useState(/** @type {string | null} */ (null))
 
   const filteredProperties = useMemo(() => {
     const q = filter.trim().toLowerCase()
@@ -104,7 +171,8 @@ export function AdminPropertiesPage() {
       const list = Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : []
       setProperties(list)
     } catch (e) {
-      setError(e?.message || 'Failed to load properties')
+      const err = /** @type {{ message?: string }} */ (e)
+      setError(err?.message || 'Failed to load properties')
     } finally {
       setLoading(false)
     }
@@ -114,6 +182,9 @@ export function AdminPropertiesPage() {
     loadProperties()
   }, [])
 
+  /**
+   * @param {import('react').ChangeEvent<HTMLInputElement>} e
+   */
   function handleCreateFilesChange(e) {
     previewUrls.forEach((url) => {
       if (typeof url === 'string' && url.startsWith('blob:')) {
@@ -129,12 +200,16 @@ export function AdminPropertiesPage() {
     setPreviewUrls(urls)
   }
 
+  /**
+   * @param {import('react').FormEvent<HTMLFormElement>} e
+   */
   async function handleCreateProperty(e) {
     e.preventDefault()
     setCreateError(null)
     setCreateSuccess(null)
     setCreatingProperty(true)
     try {
+      /** @type {PropertyWriteBody} */
       const body = {
         title: createForm.title.trim(),
         location: createForm.location.trim(),
@@ -173,20 +248,7 @@ export function AdminPropertiesPage() {
       }
 
       setCreateSuccess(editingId ? 'Property updated successfully' : 'Property created successfully')
-      setCreateForm({
-        title: '',
-        location: '',
-        monthlyRent: '',
-        billsAmount: '',
-        investmentAmount: '',
-        expectedProfit: '',
-        roi: '',
-        tenancyDetails: '',
-        details: '',
-        highlights: [],
-        customHighlight: '',
-        status: 'Available',
-      })
+      setCreateForm(emptyForm)
       previewUrls.forEach((url) => {
         if (typeof url === 'string' && url.startsWith('blob:')) {
           try {
@@ -199,12 +261,16 @@ export function AdminPropertiesPage() {
       setEditingId(null)
       await loadProperties()
     } catch (err) {
-      setCreateError(err?.data?.error || err?.message || 'Failed to create property')
+      const e = /** @type {{ data?: { error?: string }, message?: string }} */ (err)
+      setCreateError(e?.data?.error || e?.message || 'Failed to create property')
     } finally {
       setCreatingProperty(false)
     }
   }
 
+  /**
+   * @param {string | undefined} id
+   */
   async function handleDeleteProperty(id) {
     if (!id) return
     // eslint-disable-next-line no-alert
@@ -215,7 +281,8 @@ export function AdminPropertiesPage() {
       await api.deleteProperty(id)
       await loadProperties()
     } catch (err) {
-      setDeleteError(err?.data?.error || err?.message || 'Failed to delete property')
+      const e = /** @type {{ data?: { error?: string }, message?: string }} */ (err)
+      setDeleteError(e?.data?.error || e?.message || 'Failed to delete property')
     }
   }
 
@@ -285,20 +352,7 @@ export function AdminPropertiesPage() {
                     setCreateSuccess(null)
                     setEditingImages([])
                     setDeletingImageId(null)
-                    setCreateForm({
-                      title: '',
-                      location: '',
-                      monthlyRent: '',
-                      billsAmount: '',
-                      investmentAmount: '',
-                      expectedProfit: '',
-                      roi: '',
-                      tenancyDetails: '',
-                      details: '',
-                      highlights: [],
-                      customHighlight: '',
-                      status: 'Available',
-                    })
+                    setCreateForm(emptyForm)
                     previewUrls.forEach((url) => {
                       if (typeof url === 'string' && url.startsWith('blob:')) {
                         try {
@@ -322,20 +376,7 @@ export function AdminPropertiesPage() {
                   setEditingId(null)
                   setEditingImages([])
                   setDeletingImageId(null)
-                  setCreateForm({
-                    title: '',
-                    location: '',
-                    monthlyRent: '',
-                    billsAmount: '',
-                    investmentAmount: '',
-                    expectedProfit: '',
-                    roi: '',
-                    tenancyDetails: '',
-                    details: '',
-                    highlights: [],
-                    customHighlight: '',
-                    status: 'Available',
-                  })
+                  setCreateForm(emptyForm)
                   previewUrls.forEach((url) => {
                     if (typeof url === 'string' && url.startsWith('blob:')) {
                       try {
@@ -585,7 +626,8 @@ export function AdminPropertiesPage() {
                               )
                               await loadProperties()
                             } catch (err) {
-                              setDeleteError(err?.data?.error || err?.message || 'Failed to delete image')
+                              const e = /** @type {{ data?: { error?: string }, message?: string }} */ (err)
+                              setDeleteError(e?.data?.error || e?.message || 'Failed to delete image')
                             } finally {
                               setDeletingImageId(null)
                             }

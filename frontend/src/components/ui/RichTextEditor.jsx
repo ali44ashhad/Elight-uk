@@ -10,6 +10,15 @@ const toolbarOptions = [
   ['clean'],
 ]
 
+/**
+ * @param {{
+ *   value?: string,
+ *   onChange: (value: string) => void,
+ *   placeholder?: string,
+ *   label?: string,
+ *   className?: string,
+ * }} props
+ */
 export function RichTextEditor({ value = '', onChange, placeholder, label, className = '' }) {
   const modules = useMemo(
     () => ({

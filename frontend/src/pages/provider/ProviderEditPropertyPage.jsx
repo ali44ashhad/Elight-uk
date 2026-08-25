@@ -10,6 +10,45 @@ import { Button } from '../../components/ui/Button'
 import { useUserAuth } from '../../contexts/UserAuthContext'
 import * as api from '../../api'
 
+/**
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   url?: string,
+ *   secureUrl?: string,
+ * }} ProviderPropertyImage
+ *
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   title?: string,
+ *   location?: string,
+ *   monthlyRent?: number,
+ *   billsAmount?: number | null,
+ *   investmentAmount?: number,
+ *   expectedProfit?: number,
+ *   roi?: number,
+ *   tenancyDetails?: string,
+ *   details?: string,
+ *   highlights?: string[],
+ *   moderationStatus?: string,
+ *   images?: ProviderPropertyImage[],
+ * }} ProviderProperty
+ *
+ * @typedef {{
+ *   title: string,
+ *   location: string,
+ *   monthlyRent: number,
+ *   investmentAmount: number,
+ *   details: string,
+ *   highlights: string[],
+ *   billsAmount?: number | null,
+ *   expectedProfit?: number,
+ *   roi?: number,
+ *   tenancyDetails?: string,
+ * }} ProviderPropertyWriteBody
+ */
+
 export function ProviderEditPropertyPage() {
   const { id } = useParams()
   const { isAuthenticated, loading, user } = useUserAuth()
@@ -36,7 +75,7 @@ export function ProviderEditPropertyPage() {
   const MAX_IMAGES = 10
 
   const [initialLoading, setInitialLoading] = useState(true)
-  const [property, setProperty] = useState(null)
+  const [property, setProperty] = useState(/** @type {ProviderProperty | null} */ (null))
 
   const [title, setTitle] = useState('')
   const [location, setLocation] = useState('')
@@ -46,16 +85,16 @@ export function ProviderEditPropertyPage() {
   const [expectedProfit, setExpectedProfit] = useState('')
   const [roi, setRoi] = useState('')
   const [tenancyDetails, setTenancyDetails] = useState('')
-  const [highlights, setHighlights] = useState([])
+  const [highlights, setHighlights] = useState(/** @type {string[]} */ ([]))
   const [customHighlight, setCustomHighlight] = useState('')
   const [details, setDetails] = useState('')
 
-  const [newFiles, setNewFiles] = useState([])
-  const [newPreviewUrls, setNewPreviewUrls] = useState([])
+  const [newFiles, setNewFiles] = useState(/** @type {File[]} */ ([]))
+  const [newPreviewUrls, setNewPreviewUrls] = useState(/** @type {string[]} */ ([]))
 
   const [busy, setBusy] = useState(false)
-  const [error, setError] = useState(null)
-  const [deletingImageId, setDeletingImageId] = useState(null)
+  const [error, setError] = useState(/** @type {string | null} */ (null))
+  const [deletingImageId, setDeletingImageId] = useState(/** @type {string | null} */ (null))
 
   useEffect(() => {
     if (!loading && !isAuthenticated) nav(`/login?redirect=/provider/properties/${id}/edit`, { replace: true })
@@ -80,7 +119,10 @@ export function ProviderEditPropertyPage() {
         setHighlights(Array.isArray(p?.highlights) ? p.highlights.filter(Boolean).slice(0, 10) : [])
         setDetails(p?.details || '')
       })
-      .catch((e) => setError(e?.message || 'Failed to load property'))
+      .catch((e) => {
+        const err = /** @type {{ message?: string }} */ (e)
+        setError(err?.message || 'Failed to load property')
+      })
       .finally(() => setInitialLoading(false))
   }, [isAuthenticated, id])
 
@@ -89,7 +131,9 @@ export function ProviderEditPropertyPage() {
 
   const existingImgUrls = useMemo(() => {
     const images = property?.images || []
-    return images.map((im) => im?.secureUrl || im?.url).filter(Boolean)
+    return images
+      .map((im) => im?.secureUrl || im?.url)
+      .filter((u) => typeof u === 'string' && u.length > 0)
   }, [property])
 
   const existingImages = useMemo(() => {
@@ -110,6 +154,9 @@ export function ProviderEditPropertyPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  /**
+   * @param {import('react').ChangeEvent<HTMLInputElement>} e
+   */
   function handleNewFilesChange(e) {
     const picked = Array.from(e.target.files || []).filter((f) => f && f.type?.startsWith('image/'))
     if (picked.length === 0) return
@@ -137,6 +184,9 @@ export function ProviderEditPropertyPage() {
     e.target.value = ''
   }
 
+  /**
+   * @param {number} index
+   */
   function removeNewImageAt(index) {
     setNewFiles((curr) => {
       const arr = Array.isArray(curr) ? curr : []
@@ -154,6 +204,9 @@ export function ProviderEditPropertyPage() {
     })
   }
 
+  /**
+   * @param {import('react').FormEvent<HTMLFormElement>} e
+   */
   async function onSubmit(e) {
     e.preventDefault()
     if (!id) return
@@ -161,6 +214,7 @@ export function ProviderEditPropertyPage() {
     setBusy(true)
     setError(null)
     try {
+      /** @type {ProviderPropertyWriteBody} */
       const body = {
         title,
         location,
@@ -184,7 +238,8 @@ export function ProviderEditPropertyPage() {
 
       nav(`/provider/properties/${id}`, { replace: true })
     } catch (e2) {
-      setError(e2?.message || 'Failed to update')
+      const err = /** @type {{ message?: string }} */ (e2)
+      setError(err?.message || 'Failed to update')
     } finally {
       setBusy(false)
     }
@@ -376,7 +431,8 @@ export function ProviderEditPropertyPage() {
                                 const fresh = await api.providerGetMyProperty(id)
                                 setProperty(fresh || null)
                               } catch (e) {
-                                setError(e?.message || 'Failed to remove image')
+                                const err = /** @type {{ message?: string }} */ (e)
+                                setError(err?.message || 'Failed to remove image')
                               } finally {
                                 setDeletingImageId(null)
                               }

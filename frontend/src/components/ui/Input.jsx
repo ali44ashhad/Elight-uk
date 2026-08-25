@@ -1,4 +1,12 @@
 import React from 'react'
+/**
+ * @param {{
+ *   label?: string,
+ *   hint?: string,
+ *   error?: string,
+ *   className?: string,
+ * } & Omit<import('react').InputHTMLAttributes<HTMLInputElement>, 'className'>} props
+ */
 export function Input({ label, hint, error, className = '', ...props }) {
   return (
     <label className={`block ${className}`}>

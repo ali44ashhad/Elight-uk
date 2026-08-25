@@ -1,8 +1,32 @@
-  import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import * as api from '../../api'
 import { Card } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
+import { openCloudinaryPdf } from '../../utils/cloudinaryPdf'
 
+/**
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   status?: string,
+ *   rejectionReason?: string,
+ *   createdAt?: string | Date,
+ *   submittedData?: { phone?: string, company?: string, message?: string },
+ *   agreement?: { partyB?: { name?: string, companyName?: string, address?: string, registeredNumber?: string }, pdfUrl?: string },
+ *   user?: {
+ *     name?: string,
+ *     email?: string,
+ *     companyName?: string,
+ *     registeredNumber?: string,
+ *     website?: string,
+ *     address?: string,
+ *   } | null,
+ * }} AdminProviderApplication
+ */
+
+/**
+ * @param {{ status?: string | null }} props
+ */
 function Pill({ status }) {
   const s = status || 'pending'
   const cls =
@@ -14,14 +38,24 @@ function Pill({ status }) {
   return <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${cls}`}>{s}</span>
 }
 
-export function AdminProviderApplicationsPage() {
-  const [apps, setApps] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [statusFilter, setStatusFilter] = useState('pending')
-  const [busyId, setBusyId] = useState(null)
+/**
+ * @param {string | Date | undefined} value
+ */
+function formatAppliedAt(value) {
+  if (!value) return ''
+  try {
+    return new Date(value).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })
+  } catch {
+    return String(value)
+  }
+}
 
-  const filtered = useMemo(() => apps, [apps])
+export function AdminProviderApplicationsPage() {
+  const [apps, setApps] = useState(/** @type {AdminProviderApplication[]} */ ([]))
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(/** @type {string | null} */ (null))
+  const [statusFilter, setStatusFilter] = useState('pending')
+  const [busyId, setBusyId] = useState(/** @type {string | null} */ (null))
 
   async function load() {
     setLoading(true)
@@ -30,7 +64,8 @@ export function AdminProviderApplicationsPage() {
       const res = await api.getAdminProviderApplications(statusFilter ? { status: statusFilter } : {})
       setApps(Array.isArray(res) ? res : [])
     } catch (e) {
-      setError(e?.message || 'Failed to load applications')
+      const err = /** @type {{ message?: string }} */ (e)
+      setError(err?.message || 'Failed to load applications')
     } finally {
       setLoading(false)
     }
@@ -41,7 +76,12 @@ export function AdminProviderApplicationsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusFilter])
 
+  /**
+   * @param {string | undefined} id
+   * @param {'approve' | 'reject'} action
+   */
   async function review(id, action) {
+    if (!id) return
     setBusyId(id)
     setError(null)
     try {
@@ -53,9 +93,24 @@ export function AdminProviderApplicationsPage() {
       await api.reviewAdminProviderApplication(id, { action, reason })
       await load()
     } catch (e) {
-      setError(e?.message || 'Failed to review')
+      const err = /** @type {{ message?: string }} */ (e)
+      setError(err?.message || 'Failed to review')
     } finally {
       setBusyId(null)
+    }
+  }
+
+  /**
+   * @param {string | undefined} url
+   * @param {boolean} [download]
+   */
+  function onPdf(url, download = false) {
+    setError(null)
+    try {
+      openCloudinaryPdf(url, { download })
+    } catch (e) {
+      const err = /** @type {{ message?: string }} */ (e)
+      setError(err?.message || 'Agreement PDF is not available')
     }
   }
 
@@ -96,21 +151,38 @@ export function AdminProviderApplicationsPage() {
 
       {loading ? (
         <Card className="h-40 animate-pulse bg-slate-100" />
-      ) : filtered.length === 0 ? (
+      ) : apps.length === 0 ? (
         <Card className="p-6 text-sm text-slate-600">No applications found.</Card>
       ) : (
         <div className="grid gap-4">
-          {filtered.map((a) => {
+          {apps.map((a) => {
             const id = a?.id || a?._id
             const user = a?.user
+            const party = a?.agreement?.partyB
             const status = a?.status || 'pending'
             const busy = busyId === id
+            const pdfUrl = a?.agreement?.pdfUrl
+            const company = party?.companyName || user?.companyName || a?.submittedData?.company
+            const registeredNumber = party?.registeredNumber || user?.registeredNumber
+            const address = party?.address || user?.address
             return (
               <Card key={id} className="p-5">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <div className="text-sm font-black text-slate-900">{user?.name || '—'}</div>
+                    <div className="text-sm font-black text-slate-900">{user?.name || party?.name || '—'}</div>
                     <div className="mt-1 text-sm text-slate-600">{user?.email || '—'}</div>
+                    {company ? <div className="mt-1 text-sm text-slate-700">{company}</div> : null}
+                    {registeredNumber ? (
+                      <div className="mt-1 text-xs text-slate-500">Company no. {registeredNumber}</div>
+                    ) : null}
+                    {address ? (
+                      <div className="mt-1 whitespace-pre-line text-xs text-slate-500">{address}</div>
+                    ) : null}
+                    {a?.createdAt ? (
+                      <div className="mt-2 text-xs font-medium text-slate-500">
+                        Applied {formatAppliedAt(a.createdAt)}
+                      </div>
+                    ) : null}
                     {a?.submittedData?.message ? (
                       <div className="mt-3 rounded-xl bg-slate-50 p-3 text-sm text-slate-700 ring-1 ring-slate-200">
                         {a.submittedData.message}
@@ -124,6 +196,24 @@ export function AdminProviderApplicationsPage() {
                   </div>
                   <div className="flex flex-col items-end gap-2">
                     <Pill status={status} />
+                    <div className="flex flex-wrap justify-end gap-2">
+                      <Button
+                        variant="secondary"
+                        className="!px-3 !py-1 text-xs"
+                        disabled={!pdfUrl}
+                        onClick={() => onPdf(pdfUrl, false)}
+                      >
+                        View PDF
+                      </Button>
+                      <Button
+                        variant="secondary"
+                        className="!px-3 !py-1 text-xs"
+                        disabled={!pdfUrl}
+                        onClick={() => onPdf(pdfUrl, true)}
+                      >
+                        Download PDF
+                      </Button>
+                    </div>
                     {status === 'pending' ? (
                       <div className="flex flex-wrap gap-2">
                         <Button
@@ -154,4 +244,3 @@ export function AdminProviderApplicationsPage() {
     </div>
   )
 }
-

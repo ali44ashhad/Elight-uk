@@ -4,6 +4,7 @@ import { Header } from '../components/Layout/Header'
 import { Footer } from '../components/Layout/Footer'
 import { Card } from '../components/ui/Card'
 import { Input } from '../components/ui/Input'
+import { Textarea } from '../components/ui/Textarea'
 import { Button } from '../components/ui/Button'
 import { useUserAuth } from '../contexts/UserAuthContext'
 
@@ -12,6 +13,7 @@ export function UserRegisterPage() {
   const [name, setName] = useState('')
   const [companyName, setCompanyName] = useState('')
   const [registeredNumber, setRegisteredNumber] = useState('')
+  const [address, setAddress] = useState('')
   const [website, setWebsite] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -24,12 +26,15 @@ export function UserRegisterPage() {
     return s.get('redirect') || '/account'
   }, [loc.search])
 
+  /**
+   * @param {import('react').FormEvent<HTMLFormElement>} e
+   */
   async function onSubmit(e) {
     e.preventDefault()
     setBusy(true)
     setError(null)
     try {
-      await register({ name, companyName, registeredNumber, website, email, password })
+      await register({ name, companyName, registeredNumber, website, address, email, password })
       nav(redirectTo, { replace: true })
     } finally {
       setBusy(false)
@@ -42,7 +47,7 @@ export function UserRegisterPage() {
       <main className="mx-auto max-w-2xl px-4 py-10">
         <Card className="p-6">
           <h1 className="text-2xl font-bold text-teal-900">Create account</h1>
-          <p className="mt-1 text-sm text-teal-700">Register to become a provider and submit properties.</p>
+          <p className="mt-1 text-sm text-teal-700">Create an account, then apply as a provider from My account.</p>
 
           {error ? (
             <div className="mt-4 rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm font-semibold text-rose-700">
@@ -63,6 +68,13 @@ export function UserRegisterPage() {
               value={registeredNumber}
               onChange={(e) => setRegisteredNumber(e.target.value)}
               placeholder="e.g. 12345678"
+              required
+            />
+            <Textarea
+              label="Address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder="Registered office / business address"
               required
             />
             <Input

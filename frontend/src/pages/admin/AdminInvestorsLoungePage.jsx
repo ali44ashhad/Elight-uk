@@ -4,6 +4,21 @@ import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { Input } from '../../components/ui/Input'
 
+/**
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   fullName?: string,
+ *   emailAddress?: string,
+ *   mobileNumber?: string,
+ *   terms?: string[],
+ *   createdAt?: string | Date,
+ * }} AdminInvestorsLoungeSubmission
+ */
+
+/**
+ * @param {string | number | Date | null | undefined} d
+ */
 function formatDate(d) {
   if (!d) return '—'
   try {
@@ -13,6 +28,9 @@ function formatDate(d) {
   }
 }
 
+/**
+ * @param {{ title: string, subtitle?: string }} props
+ */
 function EmptyState({ title, subtitle }) {
   return (
     <Card className="p-6">
@@ -23,9 +41,9 @@ function EmptyState({ title, subtitle }) {
 }
 
 export function AdminInvestorsLoungePage() {
-  const [items, setItems] = useState([])
+  const [items, setItems] = useState(/** @type {AdminInvestorsLoungeSubmission[]} */ ([]))
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(/** @type {string | null} */ (null))
   const [filter, setFilter] = useState('')
 
   const filtered = useMemo(() => {
@@ -47,7 +65,8 @@ export function AdminInvestorsLoungePage() {
       const list = Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : []
       setItems(list)
     } catch (e) {
-      setError(e?.message || 'Failed to load Investors Lounge submissions')
+      const err = /** @type {{ message?: string }} */ (e)
+      setError(err?.message || 'Failed to load Investors Lounge submissions')
     } finally {
       setLoading(false)
     }

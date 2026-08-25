@@ -9,6 +9,51 @@ import { Input } from '../components/ui/Input'
 import { Textarea } from '../components/ui/Textarea'
 import logo from '../assets/logo.png'
 
+/**
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   url?: string,
+ *   secureUrl?: string,
+ * }} PropertyImage
+ *
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   name?: string,
+ *   imageUrl?: string,
+ * }} PropertySeller
+ *
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   title?: string,
+ *   location?: string,
+ *   status?: string,
+ *   monthlyRent?: number,
+ *   investmentAmount?: number,
+ *   expectedProfit?: number,
+ *   roi?: number,
+ *   details?: string,
+ *   tenancyDetails?: string,
+ *   createdAt?: string | Date,
+ *   updatedAt?: string | Date,
+ *   images?: PropertyImage[],
+ *   seller?: PropertySeller | null,
+ * }} PublicProperty
+ *
+ * @typedef {{
+ *   name: string,
+ *   email: string,
+ *   phone: string,
+ *   budget: string,
+ *   message: string,
+ * }} InquiryForm
+ */
+
+/**
+ * @param {unknown} n
+ */
 function formatMoney(n) {
   if (n == null || Number.isNaN(Number(n))) return '—'
   try {
@@ -22,6 +67,9 @@ function formatMoney(n) {
   }
 }
 
+/**
+ * @param {unknown} str
+ */
 function toTitleCase(str) {
   if (!str) return ''
   return String(str)
@@ -33,26 +81,30 @@ function toTitleCase(str) {
 
 export function PropertyDetailsPage() {
   const { id } = useParams()
-  const [property, setProperty] = useState(null)
+  const [property, setProperty] = useState(/** @type {PublicProperty | null} */ (null))
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [inquiryForm, setInquiryForm] = useState({
+  const [error, setError] = useState(/** @type {string | null} */ (null))
+  const [inquiryForm, setInquiryForm] = useState(/** @type {InquiryForm} */ ({
     name: '',
     email: '',
     phone: '',
     budget: '',
     message: '',
-  })
+  }))
   const [sending, setSending] = useState(false)
   const [sent, setSent] = useState(false)
-  const [inquiryError, setInquiryError] = useState(null)
-  const [inquiryDraftId, setInquiryDraftId] = useState(null)
+  const [inquiryError, setInquiryError] = useState(/** @type {string | null} */ (null))
+  const [inquiryDraftId, setInquiryDraftId] = useState(/** @type {string | null} */ (null))
   const [showInquiryModal, setShowInquiryModal] = useState(false)
 
   useEffect(() => {
     let alive = true
     setLoading(true)
     setError(null)
+    if (!id) {
+      setLoading(false)
+      return
+    }
     api
       .getProperty(id)
       .then((data) => {
@@ -61,7 +113,8 @@ export function PropertyDetailsPage() {
       })
       .catch((e) => {
         if (!alive) return
-        setError(e?.message || 'Failed to load property')
+        const err = /** @type {{ message?: string }} */ (e)
+        setError(err?.message || 'Failed to load property')
       })
       .finally(() => {
         if (!alive) return
@@ -77,7 +130,9 @@ export function PropertyDetailsPage() {
   const title = toTitleCase(rawTitle)
   const location = toTitleCase(rawLocation)
   const images = property?.images || []
-  const imgUrls = images.map((im) => im?.secureUrl || im?.url).filter(Boolean)
+  const imgUrls = images
+    .map((im) => im?.secureUrl || im?.url)
+    .filter((u) => typeof u === 'string' && u.length > 0)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   useEffect(() => {
@@ -88,6 +143,9 @@ export function PropertyDetailsPage() {
     return () => clearInterval(t)
   }, [imgUrls.length])
 
+  /**
+   * @param {import('react').FormEvent<HTMLFormElement>} e
+   */
   async function submitInquiry(e) {
     e.preventDefault()
     if (sending) return
@@ -109,7 +167,8 @@ export function PropertyDetailsPage() {
       setInquiryForm({ name: '', email: '', phone: '', budget: '', message: '' })
       setInquiryDraftId(null)
     } catch (err) {
-      setInquiryError(err?.data?.error || err?.message || 'Failed to submit inquiry')
+      const e = /** @type {{ data?: { error?: string }, message?: string }} */ (err)
+      setInquiryError(e?.data?.error || e?.message || 'Failed to submit inquiry')
     } finally {
       setSending(false)
     }

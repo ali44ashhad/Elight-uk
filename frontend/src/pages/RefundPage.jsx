@@ -4,18 +4,33 @@ import { Footer } from '../components/Layout/Footer'
 import { Button } from '../components/ui/Button'
 import * as api from '../api'
 
+/**
+ * @typedef {{
+ *   orderDate: string,
+ *   dealPropertyAddress: string,
+ *   purchaseEmail: string,
+ *   cardLast4: string,
+ *   reasonForRefund: string,
+ * }} RefundForm
+ */
+
+const EMPTY_FORM = /** @type {RefundForm} */ ({
+  orderDate: '',
+  dealPropertyAddress: '',
+  purchaseEmail: '',
+  cardLast4: '',
+  reasonForRefund: '',
+})
+
 export function RefundPage() {
-  const [form, setForm] = useState({
-    orderDate: '',
-    dealPropertyAddress: '',
-    purchaseEmail: '',
-    cardLast4: '',
-    reasonForRefund: '',
-  })
+  const [form, setForm] = useState(EMPTY_FORM)
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(/** @type {string | null} */ (null))
 
+  /**
+   * @param {import('react').FormEvent<HTMLFormElement>} e
+   */
   async function handleSubmit(e) {
     e.preventDefault()
     if (submitting) return
@@ -31,9 +46,10 @@ export function RefundPage() {
         reasonForRefund: form.reasonForRefund.trim(),
       })
       setSubmitted(true)
-      setForm({ orderDate: '', dealPropertyAddress: '', purchaseEmail: '', cardLast4: '', reasonForRefund: '' })
+      setForm(EMPTY_FORM)
     } catch (err) {
-      setError(err?.data?.error || err?.message || 'Failed to submit refund request')
+      const e = /** @type {{ data?: { error?: string }, message?: string }} */ (err)
+      setError(e?.data?.error || e?.message || 'Failed to submit refund request')
     } finally {
       setSubmitting(false)
     }

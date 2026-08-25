@@ -6,6 +6,38 @@ import { Footer } from '../components/Layout/Footer'
 import { Card } from '../components/ui/Card'
 import logo from '../assets/logo.png'
 
+/**
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   url?: string,
+ *   secureUrl?: string,
+ * }} PropertyImage
+ *
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   title?: string,
+ *   location?: string,
+ *   status?: string,
+ *   underOfferUntil?: string | Date | null,
+ *   monthlyRent?: number,
+ *   investmentAmount?: number,
+ *   createdAt?: string | Date,
+ *   images?: PropertyImage[],
+ * }} SellerListedProperty
+ *
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   name?: string,
+ *   imageUrl?: string,
+ * }} PublicSeller
+ */
+
+/**
+ * @param {unknown} n
+ */
 function formatMoney(n) {
   if (n == null || Number.isNaN(Number(n))) return '—'
   try {
@@ -19,6 +51,9 @@ function formatMoney(n) {
   }
 }
 
+/**
+ * @param {unknown} str
+ */
 function toTitleCase(str) {
   if (!str) return ''
   return String(str)
@@ -28,6 +63,9 @@ function toTitleCase(str) {
     .join(' ')
 }
 
+/**
+ * @param {SellerListedProperty | null | undefined} property
+ */
 function getEffectiveStatus(property) {
   const raw = property?.status || 'Available'
   const until = property?.underOfferUntil ? new Date(property.underOfferUntil) : null
@@ -40,13 +78,13 @@ function getEffectiveStatus(property) {
 
 export function SellerProfilePage() {
   const { id } = useParams()
-  const [seller, setSeller] = useState(null)
-  const [properties, setProperties] = useState([])
+  const [seller, setSeller] = useState(/** @type {PublicSeller | null} */ (null))
+  const [properties, setProperties] = useState(/** @type {SellerListedProperty[]} */ ([]))
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(/** @type {string | null} */ (null))
 
   const orderedProperties = useMemo(() => {
-    const rank = (p) => {
+    const rank = (/** @type {SellerListedProperty} */ p) => {
       const s = getEffectiveStatus(p)
       if (s === 'Available') return 0
       if (s === 'UnderOffer') return 1
@@ -82,7 +120,8 @@ export function SellerProfilePage() {
       })
       .catch((e) => {
         if (!alive) return
-        setError(e?.message || 'Failed to load')
+        const err = /** @type {{ message?: string }} */ (e)
+        setError(err?.message || 'Failed to load')
       })
       .finally(() => {
         if (!alive) return
@@ -148,7 +187,9 @@ export function SellerProfilePage() {
                   {orderedProperties.map((p) => {
                     const propId = p?.id || p?._id
                     const images = p?.images || []
-                    const imgUrl = images.map((im) => im?.secureUrl || im?.url).filter(Boolean)[0]
+                    const imgUrl = images
+                      .map((im) => im?.secureUrl || im?.url)
+                      .filter((u) => typeof u === 'string' && u.length > 0)[0]
                     const title = toTitleCase(p?.title || '')
                     const location = toTitleCase(p?.location || '')
                     const status = getEffectiveStatus(p)

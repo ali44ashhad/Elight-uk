@@ -8,7 +8,26 @@ import { Input } from '../components/ui/Input'
 import { Textarea } from '../components/ui/Textarea'
 import { useUserAuth } from '../contexts/UserAuthContext'
 import * as api from '../api'
+import { openCloudinaryPdf } from '../utils/cloudinaryPdf'
 
+/**
+ * @typedef {{
+ *   user?: { providerStatus?: string, address?: string } | null,
+ *   application?: {
+ *     id?: string,
+ *     createdAt?: string,
+ *     rejectionReason?: string,
+ *     status?: string,
+ *     agreement?: { pdfUrl?: string },
+ *   } | null,
+ * }} ProviderMe
+ *
+ * @typedef {'profile' | 'provider' | 'security'} AccountSection
+ */
+
+/**
+ * @param {{ status?: string | null }} props
+ */
 function StatusPill({ status }) {
   const s = status || 'none'
   const cls =
@@ -26,24 +45,25 @@ export function UserAccountPage() {
   const { user, loading, isAuthenticated, logout, refreshMe } = useUserAuth()
   const nav = useNavigate()
 
-  const [provider, setProvider] = useState(null)
+  const [provider, setProvider] = useState(/** @type {ProviderMe | null} */ (null))
   const [applyMessage, setApplyMessage] = useState('')
+  const [applyAddress, setApplyAddress] = useState('')
   const [busyApply, setBusyApply] = useState(false)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(/** @type {string | null} */ (null))
 
-  const [section, setSection] = useState('profile') // profile | provider | security
+  const [section, setSection] = useState(/** @type {AccountSection} */ ('profile'))
 
   const [profileName, setProfileName] = useState('')
   const [savingProfile, setSavingProfile] = useState(false)
-  const [profileOk, setProfileOk] = useState(null)
+  const [profileOk, setProfileOk] = useState(/** @type {string | null} */ (null))
 
-  const [avatarFile, setAvatarFile] = useState(null)
+  const [avatarFile, setAvatarFile] = useState(/** @type {File | null} */ (null))
   const [uploadingAvatar, setUploadingAvatar] = useState(false)
 
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [changingPw, setChangingPw] = useState(false)
-  const [pwOk, setPwOk] = useState(null)
+  const [pwOk, setPwOk] = useState(/** @type {string | null} */ (null))
 
   useEffect(() => {
     if (!isAuthenticated) return
@@ -51,8 +71,15 @@ export function UserAccountPage() {
     api
       .providerMe()
       .then((data) => setProvider(data))
-      .catch((e) => setError(e?.message || 'Failed to load provider status'))
+      .catch((e) => {
+        const err = /** @type {{ message?: string }} */ (e)
+        setError(err?.message || 'Failed to load provider status')
+      })
   }, [isAuthenticated])
+
+  useEffect(() => {
+    if (provider?.user?.address) setApplyAddress(provider.user.address)
+  }, [provider?.user?.address])
 
   useEffect(() => {
     setProfileName(user?.name || '')
@@ -68,18 +95,38 @@ export function UserAccountPage() {
     return provider?.user?.providerStatus || user?.providerStatus || 'none'
   }, [provider?.user?.providerStatus, user?.providerStatus])
 
+  const pdfUrl = provider?.application?.agreement?.pdfUrl || ''
+
   async function onApplyProvider() {
+    if (!applyAddress.trim()) {
+      setError('Address is required')
+      return
+    }
     setBusyApply(true)
     setError(null)
     try {
-      await api.providerApply({ message: applyMessage })
+      await api.providerApply({ message: applyMessage, address: applyAddress })
       await refreshMe()
       const data = await api.providerMe()
       setProvider(data)
     } catch (e) {
-      setError(e?.message || 'Failed to apply')
+      const err = /** @type {{ message?: string }} */ (e)
+      setError(err?.message || 'Failed to apply')
     } finally {
       setBusyApply(false)
+    }
+  }
+
+  /**
+   * @param {boolean} [download]
+   */
+  function onOpenAgreement(download = false) {
+    setError(null)
+    try {
+      openCloudinaryPdf(pdfUrl, { download })
+    } catch (e) {
+      const err = /** @type {{ message?: string }} */ (e)
+      setError(err?.message || 'Agreement PDF is not available')
     }
   }
 
@@ -92,12 +139,16 @@ export function UserAccountPage() {
       await refreshMe()
       setProfileOk('Saved')
     } catch (e) {
-      setError(e?.message || 'Failed to save profile')
+      const err = /** @type {{ message?: string }} */ (e)
+      setError(err?.message || 'Failed to save profile')
     } finally {
       setSavingProfile(false)
     }
   }
 
+  /**
+   * @param {File | null} file
+   */
   async function onPickAvatar(file) {
     if (!file) return
     // keep filename visible while uploading
@@ -111,7 +162,8 @@ export function UserAccountPage() {
       setAvatarFile(null)
       await refreshMe()
     } catch (e) {
-      setError(e?.message || 'Failed to upload avatar')
+      const err = /** @type {{ message?: string }} */ (e)
+      setError(err?.message || 'Failed to upload avatar')
     } finally {
       setUploadingAvatar(false)
     }
@@ -127,10 +179,23 @@ export function UserAccountPage() {
       setNewPassword('')
       setPwOk('Password changed')
     } catch (e) {
-      setError(e?.message || 'Failed to change password')
+      const err = /** @type {{ message?: string }} */ (e)
+      setError(err?.message || 'Failed to change password')
     } finally {
       setChangingPw(false)
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white text-teal-900">
+        <Header variant="light" />
+        <main className="mx-auto max-w-6xl px-4 py-10">
+          <div className="h-40 animate-pulse rounded-2xl bg-slate-100" />
+        </main>
+        <Footer />
+      </div>
+    )
   }
 
   return (
@@ -258,6 +323,17 @@ export function UserAccountPage() {
                   </div>
                 </div>
 
+                {pdfUrl ? (
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    <Button variant="secondary" onClick={() => onOpenAgreement(false)}>
+                      View agreement
+                    </Button>
+                    <Button variant="secondary" onClick={() => onOpenAgreement(true)}>
+                      Download PDF
+                    </Button>
+                  </div>
+                ) : null}
+
                 {providerStatus === 'approved' ? (
                   <div className="mt-5 flex flex-wrap gap-2">
                     <Button as={Link} to="/provider/properties" variant="secondary">
@@ -271,11 +347,24 @@ export function UserAccountPage() {
 
                 {providerStatus === 'none' || providerStatus === 'rejected' ? (
                   <div className="mt-6 rounded-2xl border border-teal-100 bg-teal-50/40 p-4">
-                    <div className="text-sm font-bold text-teal-900">Become a provider</div>
+                    <div className="text-sm font-bold text-teal-900">
+                      {providerStatus === 'rejected' ? 'Apply again' : 'Become a provider'}
+                    </div>
                     <p className="mt-1 text-sm text-teal-700">
                       Submit your request and wait for admin approval. After approval, you can submit properties for review.
                     </p>
+                    {provider?.application?.rejectionReason ? (
+                      <p className="mt-2 text-sm font-semibold text-rose-700">
+                        Rejection reason: {provider.application.rejectionReason}
+                      </p>
+                    ) : null}
                     <div className="mt-4 grid gap-3">
+                      <Textarea
+                        label="Address"
+                        value={applyAddress}
+                        onChange={(e) => setApplyAddress(e.target.value)}
+                        placeholder="Registered office / business address"
+                      />
                       <Textarea
                         label="Message (optional)"
                         value={applyMessage}
@@ -283,7 +372,7 @@ export function UserAccountPage() {
                         placeholder="Tell us about your properties…"
                       />
                       <div className="flex items-center gap-3">
-                        <Button onClick={onApplyProvider} disabled={busyApply}>
+                        <Button onClick={onApplyProvider} disabled={busyApply || !applyAddress.trim()}>
                           {busyApply ? 'Submitting…' : 'Apply'}
                         </Button>
                         <span className="text-xs text-slate-500">Admin will review your request.</span>
@@ -335,4 +424,3 @@ export function UserAccountPage() {
     </div>
   )
 }
-

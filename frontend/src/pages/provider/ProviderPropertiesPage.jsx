@@ -7,6 +7,34 @@ import { Button } from '../../components/ui/Button'
 import { useUserAuth } from '../../contexts/UserAuthContext'
 import * as api from '../../api'
 
+/**
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   url?: string,
+ *   secureUrl?: string,
+ * }} ProviderPropertyImage
+ *
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   title?: string,
+ *   location?: string,
+ *   monthlyRent?: number,
+ *   billsAmount?: number | null,
+ *   expectedProfit?: number,
+ *   roi?: number,
+ *   moderationStatus?: string,
+ *   createdAt?: string | Date,
+ *   images?: ProviderPropertyImage[],
+ * }} ProviderProperty
+ *
+ * @typedef {'emerald' | 'amber' | 'rose' | 'slate'} PillTone
+ */
+
+/**
+ * @param {unknown} n
+ */
 function formatMoney(n) {
   if (n == null || Number.isNaN(Number(n))) return '—'
   try {
@@ -20,6 +48,9 @@ function formatMoney(n) {
   }
 }
 
+/**
+ * @param {{ children: import('react').ReactNode, tone?: PillTone }} props
+ */
 function Pill({ children, tone = 'slate' }) {
   const cls =
     tone === 'emerald'
@@ -35,9 +66,9 @@ function Pill({ children, tone = 'slate' }) {
 export function ProviderPropertiesPage() {
   const { isAuthenticated, loading, user } = useUserAuth()
   const nav = useNavigate()
-  const [items, setItems] = useState([])
+  const [items, setItems] = useState(/** @type {ProviderProperty[]} */ ([]))
   const [busy, setBusy] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(/** @type {string | null} */ (null))
 
   useEffect(() => {
     if (!loading && !isAuthenticated) nav('/login?redirect=/provider/properties', { replace: true })
@@ -50,12 +81,15 @@ export function ProviderPropertiesPage() {
     api
       .providerGetMyProperties()
       .then((data) => setItems(Array.isArray(data) ? data : []))
-      .catch((e) => setError(e?.message || 'Failed to load'))
+      .catch((e) => {
+        const err = /** @type {{ message?: string }} */ (e)
+        setError(err?.message || 'Failed to load')
+      })
       .finally(() => setBusy(false))
   }, [isAuthenticated])
 
   const ordered = useMemo(() => {
-    const rank = (p) => {
+    const rank = (/** @type {ProviderProperty} */ p) => {
       const s = p?.moderationStatus || 'pending'
       if (s === 'pending') return 0
       if (s === 'approved') return 1

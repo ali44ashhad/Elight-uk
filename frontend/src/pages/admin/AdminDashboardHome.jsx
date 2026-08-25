@@ -4,6 +4,28 @@ import * as api from '../../api'
 import { request } from '../../api'
 import { Card } from '../../components/ui/Card'
 
+/**
+ * @typedef {'properties' | 'deals' | 'inquiries' | 'refunds'} DashboardCountKey
+ * @typedef {'emerald' | 'sky' | 'violet' | 'slate'} StatTone
+ * @typedef {{
+ *   key: DashboardCountKey,
+ *   title: string,
+ *   to: string,
+ *   tone: StatTone,
+ *   subtitle: string,
+ * }} DashboardSummaryItem
+ */
+
+/**
+ * @param {{
+ *   title: string,
+ *   value: number,
+ *   subtitle: string,
+ *   to: string,
+ *   loading: boolean,
+ *   tone?: StatTone,
+ * }} props
+ */
 function StatCard({ title, value, subtitle, to, loading, tone = 'slate' }) {
   const ring =
     tone === 'emerald'
@@ -40,10 +62,16 @@ function StatCard({ title, value, subtitle, to, loading, tone = 'slate' }) {
 
 export function AdminDashboardHome() {
   const [loading, setLoading] = useState(true)
-  const [counts, setCounts] = useState({ properties: 0, deals: 0, inquiries: 0, refunds: 0 })
+  const [counts, setCounts] = useState(/** @type {Record<DashboardCountKey, number>} */ ({
+    properties: 0,
+    deals: 0,
+    inquiries: 0,
+    refunds: 0,
+  }))
 
   const summary = useMemo(
-    () => [
+    () =>
+      /** @type {DashboardSummaryItem[]} */ ([
       {
         key: 'properties',
         title: 'Properties',
@@ -72,14 +100,14 @@ export function AdminDashboardHome() {
         tone: 'violet',
         subtitle: 'View refund requests submitted from the public refund form.',
       },
-    ],
+    ]),
     []
   )
 
   useEffect(() => {
     let alive = true
 
-    function getTotal(res) {
+    function getTotal(/** @type {any} */ res) {
       if (res?.pagination?.total != null) return Number(res.pagination.total) || 0
       if (Array.isArray(res?.data)) return res.data.length
       if (Array.isArray(res)) return res.length
@@ -89,7 +117,7 @@ export function AdminDashboardHome() {
     async function load() {
       setLoading(true)
       try {
-        const [p, s, d, i, r] = await Promise.allSettled([
+        const [p, d, i, r] = await Promise.allSettled([
           api.getAdminProperties({ page: 1, limit: 1 }),
           api.getAdminDeals({ page: 1, limit: 1 }),
           api.getAdminInquiries({ page: 1, limit: 1 }),

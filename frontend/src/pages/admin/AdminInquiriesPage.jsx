@@ -4,6 +4,32 @@ import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { Input } from '../../components/ui/Input'
 
+/**
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   title?: string,
+ *   location?: string,
+ * }} AdminInquiryProperty
+ *
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   name?: string,
+ *   email?: string,
+ *   phone?: string,
+ *   budget?: string,
+ *   message?: string,
+ *   status?: string,
+ *   hasDeal?: boolean,
+ *   createdAt?: string | Date,
+ *   property?: AdminInquiryProperty | null,
+ * }} AdminInquiry
+ */
+
+/**
+ * @param {string | number | Date | null | undefined} d
+ */
 function formatDate(d) {
   if (!d) return '—'
   try {
@@ -13,6 +39,9 @@ function formatDate(d) {
   }
 }
 
+/**
+ * @param {{ title: string, subtitle?: string }} props
+ */
 function EmptyState({ title, subtitle }) {
   return (
     <Card className="p-6">
@@ -23,11 +52,11 @@ function EmptyState({ title, subtitle }) {
 }
 
 export function AdminInquiriesPage() {
-  const [inquiries, setInquiries] = useState([])
+  const [inquiries, setInquiries] = useState(/** @type {AdminInquiry[]} */ ([]))
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [creatingDealId, setCreatingDealId] = useState(null)
-  const [dealError, setDealError] = useState(null)
+  const [error, setError] = useState(/** @type {string | null} */ (null))
+  const [creatingDealId, setCreatingDealId] = useState(/** @type {string | null} */ (null))
+  const [dealError, setDealError] = useState(/** @type {string | null} */ (null))
   const [filter, setFilter] = useState('')
 
   const filteredInquiries = useMemo(() => {
@@ -50,7 +79,8 @@ export function AdminInquiriesPage() {
       const list = Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : []
       setInquiries(list)
     } catch (e) {
-      setError(e?.message || 'Failed to load inquiries')
+      const err = /** @type {{ message?: string }} */ (e)
+      setError(err?.message || 'Failed to load inquiries')
     } finally {
       setLoading(false)
     }
@@ -161,7 +191,7 @@ export function AdminInquiriesPage() {
                               await api.createAdminDealFromInquiry(id)
                               await loadInquiries()
                             } catch (e) {
-                              setDealError(e?.message || 'Failed to create deal')
+                              setDealError(/** @type {{ message?: string }} */ (e)?.message || 'Failed to create deal')
                             } finally {
                               setCreatingDealId(null)
                             }

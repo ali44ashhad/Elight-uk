@@ -1,5 +1,11 @@
 import React from 'react'
 
+/**
+ * @param {{
+ *   className?: string,
+ *   children?: import('react').ReactNode,
+ * }} props
+ */
 export function Card({ className = '', children, ...props }) {
   return (
     <div

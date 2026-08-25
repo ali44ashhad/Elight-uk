@@ -1,10 +1,11 @@
 import { ProviderApplication } from '../models/ProviderApplication.js';
 import { User } from '../models/User.js';
 import { withId } from '../utils/mapId.js';
+import { createPendingProviderApplication, ensureAgreementPdfUploaded, needsAgreementRebuild } from '../lib/createProviderApplication.js';
 
 export async function applyForProvider(req, res) {
   const userId = req.userId;
-  const { phone, company, message } = req.body || {};
+  const { phone, company, message, address } = req.body || {};
 
   const user = await User.findById(userId);
   if (!user) return res.status(404).json({ error: 'User not found' });
@@ -18,36 +19,45 @@ export async function applyForProvider(req, res) {
     return res.status(409).json({ error: 'Application already pending' });
   }
 
-  const app = await ProviderApplication.create({
-    user: userId,
-    status: 'pending',
-    submittedData: {
-      phone: phone != null ? String(phone).trim() : '',
-      company: company != null ? String(company).trim() : '',
-      message: message != null ? String(message).trim() : '',
-    },
+  if (address != null && String(address).trim()) {
+    user.address = String(address).trim();
+  }
+
+  const app = await createPendingProviderApplication(user, {
+    phone,
+    company,
+    message,
   });
 
   user.providerStatus = 'pending';
   await user.save();
 
-  const populated = await ProviderApplication.findById(app._id).populate('user', 'name email providerStatus').lean();
+  const populated = await ProviderApplication.findById(app._id)
+    .populate('user', 'name email providerStatus companyName registeredNumber website address')
+    .lean();
   res.status(201).json(withId(populated));
 }
 
 export async function getProviderStatus(req, res) {
   const userId = req.userId;
-  const user = await User.findById(userId).select('name email providerStatus').lean();
+  const user = await User.findById(userId).select('name email providerStatus address').lean();
   if (!user) return res.status(404).json({ error: 'User not found' });
 
-  const latest = await ProviderApplication.findOne({ user: userId })
-    .sort({ createdAt: -1 })
-    .select('status submittedData reviewedAt rejectionReason createdAt updatedAt')
-    .lean();
+  const latestDoc = await ProviderApplication.findOne({ user: userId }).sort({ createdAt: -1 });
+  if (latestDoc && needsAgreementRebuild(latestDoc)) {
+    try {
+      const partyUser = await User.findById(userId)
+        .select('name companyName registeredNumber website email address')
+        .lean();
+      await ensureAgreementPdfUploaded(latestDoc, partyUser);
+    } catch (e) {
+      console.error('[agreement.ensure]', e);
+    }
+  }
 
+  const latest = latestDoc ? latestDoc.toObject({ virtuals: true }) : null;
   res.json({
     user: withId(user),
     application: latest ? withId(latest) : null,
   });
 }
-

@@ -7,6 +7,35 @@ import { Button } from '../../components/ui/Button'
 import { useUserAuth } from '../../contexts/UserAuthContext'
 import * as api from '../../api'
 
+/**
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   url?: string,
+ *   secureUrl?: string,
+ * }} ProviderPropertyImage
+ *
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   title?: string,
+ *   location?: string,
+ *   monthlyRent?: number,
+ *   investmentAmount?: number,
+ *   expectedProfit?: number,
+ *   roi?: number,
+ *   tenancyDetails?: string,
+ *   highlights?: string[],
+ *   moderationStatus?: string,
+ *   images?: ProviderPropertyImage[],
+ * }} ProviderProperty
+ *
+ * @typedef {'emerald' | 'amber' | 'rose' | 'slate'} PillTone
+ */
+
+/**
+ * @param {unknown} n
+ */
 function formatMoney(n) {
   if (n == null || Number.isNaN(Number(n))) return '—'
   try {
@@ -20,6 +49,9 @@ function formatMoney(n) {
   }
 }
 
+/**
+ * @param {{ children: import('react').ReactNode, tone?: PillTone }} props
+ */
 function Pill({ children, tone = 'slate' }) {
   const cls =
     tone === 'emerald'
@@ -36,9 +68,9 @@ export function ProviderPropertyDetailsPage() {
   const { id } = useParams()
   const { isAuthenticated, loading, user } = useUserAuth()
   const nav = useNavigate()
-  const [property, setProperty] = useState(null)
+  const [property, setProperty] = useState(/** @type {ProviderProperty | null} */ (null))
   const [busy, setBusy] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(/** @type {string | null} */ (null))
 
   useEffect(() => {
     if (!loading && !isAuthenticated) nav(`/login?redirect=/provider/properties/${id}`, { replace: true })
@@ -51,7 +83,10 @@ export function ProviderPropertyDetailsPage() {
     api
       .providerGetMyProperty(id)
       .then((data) => setProperty(data || null))
-      .catch((e) => setError(e?.message || 'Failed to load'))
+      .catch((e) => {
+        const err = /** @type {{ message?: string }} */ (e)
+        setError(err?.message || 'Failed to load')
+      })
       .finally(() => setBusy(false))
   }, [isAuthenticated, id])
 
@@ -61,7 +96,9 @@ export function ProviderPropertyDetailsPage() {
 
   const imgUrls = useMemo(() => {
     const images = property?.images || []
-    return images.map((im) => im?.secureUrl || im?.url).filter(Boolean)
+    return images
+      .map((im) => im?.secureUrl || im?.url)
+      .filter((u) => typeof u === 'string' && u.length > 0)
   }, [property])
   const heroImg = imgUrls[0]
 

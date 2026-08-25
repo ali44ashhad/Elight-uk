@@ -4,6 +4,32 @@ import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { Input } from '../../components/ui/Input'
 
+/**
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   title?: string,
+ *   location?: string,
+ * }} AdminDealProperty
+ *
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   investorName?: string,
+ *   investorEmail?: string,
+ *   status?: string,
+ *   createdAt?: string | Date,
+ *   paymentAt?: string | Date,
+ *   rejectBy?: string | Date,
+ *   refundEligible?: boolean,
+ *   amount?: number,
+ *   property?: AdminDealProperty | null,
+ * }} AdminDeal
+ */
+
+/**
+ * @param {unknown} n
+ */
 function formatMoney(n) {
   if (n == null || Number.isNaN(Number(n))) return '—'
   try {
@@ -17,6 +43,9 @@ function formatMoney(n) {
   }
 }
 
+/**
+ * @param {string | number | Date | null | undefined} d
+ */
 function formatDate(d) {
   if (!d) return '—'
   try {
@@ -26,6 +55,9 @@ function formatDate(d) {
   }
 }
 
+/**
+ * @param {{ value?: string | null }} props
+ */
 function StatusBadge({ value }) {
   const raw = value || '—'
   const normalized = raw === 'rejected_refunded' ? 'refunded' : raw
@@ -77,6 +109,9 @@ function StatusBadge({ value }) {
   )
 }
 
+/**
+ * @param {{ title: string, subtitle?: string }} props
+ */
 function EmptyState({ title, subtitle }) {
   return (
     <Card className="p-6">
@@ -87,9 +122,9 @@ function EmptyState({ title, subtitle }) {
 }
 
 export function AdminDealsPage() {
-  const [deals, setDeals] = useState([])
+  const [deals, setDeals] = useState(/** @type {AdminDeal[]} */ ([]))
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(/** @type {string | null} */ (null))
   const [dealFilter, setDealFilter] = useState('')
 
   const filteredDeals = useMemo(() => {
@@ -112,7 +147,8 @@ export function AdminDealsPage() {
       const list = Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : []
       setDeals(list)
     } catch (e) {
-      setError(e?.message || 'Failed to load deals')
+      const err = /** @type {{ message?: string }} */ (e)
+      setError(err?.message || 'Failed to load deals')
     } finally {
       setLoading(false)
     }
@@ -122,7 +158,7 @@ export function AdminDealsPage() {
     loadDeals()
   }, [])
 
-  async function dealAction(dealId, action) {
+  async function dealAction(/** @type {string} */ dealId, /** @type {string} */ action) {
     await api.updateDeal(dealId, { action })
     await loadDeals()
   }
@@ -181,6 +217,7 @@ export function AdminDealsPage() {
         <div className="grid gap-4">
           {filteredDeals.map((d) => {
             const id = d?.id || d?._id
+            if (!id) return null
             const p = d?.property
             const canRecordPayment = d?.status === 'pending_payment'
             const canMarkSold = d?.status === 'under_offer'

@@ -4,6 +4,9 @@ import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { Input } from '../../components/ui/Input'
 
+/**
+ * @param {string | number | Date | null | undefined} d
+ */
 function formatDate(d) {
   if (!d) return '—'
   try {
@@ -13,6 +16,9 @@ function formatDate(d) {
   }
 }
 
+/**
+ * @param {string | null | undefined} status
+ */
 function providerPill(status) {
   const s = status || 'none'
   const cls =
@@ -26,21 +32,43 @@ function providerPill(status) {
   return <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${cls}`}>{s}</span>
 }
 
+/**
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   name?: string,
+ *   email?: string,
+ *   companyName?: string,
+ *   registeredNumber?: string,
+ *   website?: string,
+ *   providerStatus?: string,
+ *   isActive?: boolean,
+ *   createdAt?: string | Date,
+ * }} AdminUser
+ *
+ * @typedef {{
+ *   page?: number,
+ *   pages?: number,
+ *   total?: number,
+ * }} AdminUserPagination
+ */
+
 export function AdminUsersPage() {
-  const [rows, setRows] = useState([])
-  const [pagination, setPagination] = useState(null)
+  const [rows, setRows] = useState(/** @type {AdminUser[]} */ ([]))
+  const [pagination, setPagination] = useState(/** @type {AdminUserPagination | null} */ (null))
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(/** @type {string | null} */ (null))
   const [role, setRole] = useState('')
   const [q, setQ] = useState('')
   const [qDraft, setQDraft] = useState('')
   const [page, setPage] = useState(1)
-  const [busyId, setBusyId] = useState(null)
+  const [busyId, setBusyId] = useState(/** @type {string | null} */ (null))
 
   const load = useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
+      /** @type {{ page: number, limit: number, role?: string, q?: string }} */
       const params = { page, limit: 20 }
       if (role === 'providers' || role === 'buyers') params.role = role
       const trimmed = q.trim()
@@ -50,7 +78,8 @@ export function AdminUsersPage() {
       setRows(list)
       setPagination(res?.pagination || null)
     } catch (e) {
-      setError(e?.message || 'Failed to load users')
+      const err = /** @type {{ message?: string }} */ (e)
+      setError(err?.message || 'Failed to load users')
       setRows([])
       setPagination(null)
     } finally {
@@ -62,6 +91,9 @@ export function AdminUsersPage() {
     load()
   }, [load])
 
+  /**
+   * @param {AdminUser} row
+   */
   async function toggleActive(row) {
     const id = row?.id || row?._id
     if (!id) return
@@ -72,7 +104,8 @@ export function AdminUsersPage() {
       await api.patchAdminUser(id, { isActive: next })
       await load()
     } catch (e) {
-      setError(e?.message || 'Failed to update user')
+      const err = /** @type {{ message?: string }} */ (e)
+      setError(err?.message || 'Failed to update user')
     } finally {
       setBusyId(null)
     }

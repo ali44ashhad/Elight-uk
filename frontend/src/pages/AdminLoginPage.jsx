@@ -27,6 +27,9 @@ export function AdminLoginPage() {
     }
   }, [isAuthenticated, loading, nav, searchParams])
 
+  /**
+   * @param {import('react').FormEvent<HTMLFormElement>} e
+   */
   async function submit(e) {
     e.preventDefault()
     setSubmitting(true)

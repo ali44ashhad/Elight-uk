@@ -17,29 +17,54 @@ const PROPERTY_TYPES = [
 
 const PROPERTY_STYLES = ['Studio', 'Detached', 'Semi Detached', 'Terrace', 'Apartment', 'Maisonette']
 
+/**
+ * @typedef {{
+ *   propertyType: string,
+ *   propertyStyles: string[],
+ *   bedrooms: string,
+ *   reason: string,
+ *   region: string,
+ *   district: string,
+ *   ward: string,
+ *   fullName: string,
+ *   email: string,
+ *   mobile: string,
+ *   telephone: string,
+ *   budget: string,
+ *   correspondenceAddress: string,
+ *   postcode: string,
+ *   acceptTerms: boolean,
+ * }} GettingStartedForm
+ */
+
+const EMPTY_FORM = /** @type {GettingStartedForm} */ ({
+  propertyType: '',
+  propertyStyles: [],
+  bedrooms: '',
+  reason: '',
+  region: '',
+  district: '',
+  ward: '',
+  fullName: '',
+  email: '',
+  mobile: '',
+  telephone: '',
+  budget: '',
+  correspondenceAddress: '',
+  postcode: '',
+  acceptTerms: false,
+})
+
 export function GettingStartedPage() {
   const [step, setStep] = useState(1)
   const [submitting, setSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState(null)
+  const [submitError, setSubmitError] = useState(/** @type {string | null} */ (null))
   const [submitSuccess, setSubmitSuccess] = useState(false)
-  const [form, setForm] = useState({
-    propertyType: '',
-    propertyStyles: [],
-    bedrooms: '',
-    reason: '',
-    region: '',
-    district: '',
-    ward: '',
-    fullName: '',
-    email: '',
-    mobile: '',
-    telephone: '',
-    budget: '',
-    correspondenceAddress: '',
-    postcode: '',
-    acceptTerms: false,
-  })
+  const [form, setForm] = useState(EMPTY_FORM)
 
+  /**
+   * @param {string} style
+   */
   function toggleStyle(style) {
     setForm((prev) => {
       const has = prev.propertyStyles.includes(style)
@@ -58,6 +83,9 @@ export function GettingStartedPage() {
     return !!form.bedrooms && !!form.region
   }
 
+  /**
+   * @param {import('react').FormEvent<HTMLFormElement>} e
+   */
   async function handleSubmit(e) {
     e.preventDefault()
     if (!form.propertyType || !form.fullName || !form.email || !form.acceptTerms) {
@@ -86,26 +114,11 @@ export function GettingStartedPage() {
         postcode: form.postcode,
       })
       setSubmitSuccess(true)
-      setForm({
-        propertyType: '',
-        propertyStyles: [],
-        bedrooms: '',
-        reason: '',
-        region: '',
-        district: '',
-        ward: '',
-        fullName: '',
-        email: '',
-        mobile: '',
-        telephone: '',
-        budget: '',
-        correspondenceAddress: '',
-        postcode: '',
-        acceptTerms: false,
-      })
+      setForm(EMPTY_FORM)
       setStep(1)
     } catch (err) {
-      setSubmitError(err?.data?.error || err?.message || 'Failed to submit request')
+      const e = /** @type {{ data?: { error?: string }, message?: string }} */ (err)
+      setSubmitError(e?.data?.error || e?.message || 'Failed to submit request')
     } finally {
       setSubmitting(false)
     }

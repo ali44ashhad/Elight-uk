@@ -20,6 +20,9 @@ export function UserLoginPage() {
     return s.get('redirect') || '/account'
   }, [loc.search])
 
+  /**
+   * @param {import('react').FormEvent<HTMLFormElement>} e
+   */
   async function onSubmit(e) {
     e.preventDefault()
     setBusy(true)

@@ -17,6 +17,9 @@ const NAV_ITEMS = [
   { path: '/admin/investors-lounge', label: 'Investors Lounge' },
 ]
 
+/**
+ * @param {{ to: string, active: boolean, children: import('react').ReactNode }} props
+ */
 function NavButton({ to, active, children }) {
   return (
     <Link
@@ -32,6 +35,9 @@ function NavButton({ to, active, children }) {
   )
 }
 
+/**
+ * @param {{ children: import('react').ReactNode }} props
+ */
 export function AdminLayout({ children }) {
   const { user, logout } = useAuth()
   const location = useLocation()

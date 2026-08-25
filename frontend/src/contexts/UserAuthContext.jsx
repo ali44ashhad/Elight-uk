@@ -7,14 +7,15 @@ import * as api from '../api'
  *   loading: boolean,
  *   error: string | null,
  *   isAuthenticated: boolean,
- *   register: (payload: {
- *     name: string,
- *     companyName: string,
- *     registeredNumber: string,
- *     website: string,
- *     email: string,
- *     password: string,
- *   }) => Promise<any>,
+   *   register: (payload: {
+   *     name: string,
+   *     companyName: string,
+   *     registeredNumber: string,
+   *     website: string,
+   *     address: string,
+   *     email: string,
+   *     password: string,
+   *   }) => Promise<any>,
  *   login: (email: string, password: string) => Promise<any>,
  *   logout: () => void,
  *   refreshMe: () => Promise<void>,
@@ -36,7 +37,7 @@ export function UserAuthProvider({ children }) {
   const [error, setError] = useState(/** @type {string | null} */ (null))
 
   const register = useCallback(
-    async (/** @type {{ name: string, companyName: string, registeredNumber: string, website: string, email: string, password: string }} */ { name, companyName, registeredNumber, website, email, password }) => {
+    async (/** @type {{ name: string, companyName: string, registeredNumber: string, website: string, address: string, email: string, password: string }} */ { name, companyName, registeredNumber, website, address, email, password }) => {
     setError(null) 
     try {
       const { token, user } = await api.userRegister({
@@ -44,6 +45,7 @@ export function UserAuthProvider({ children }) {
         companyName,
         registeredNumber,
         website,
+        address,
         email,
         password,
       })

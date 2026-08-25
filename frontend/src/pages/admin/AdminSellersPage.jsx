@@ -4,16 +4,30 @@ import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { Input } from '../../components/ui/Input'
 
+/**
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   name?: string,
+ *   imageUrl?: string,
+ * }} AdminSeller
+ *
+ * @typedef {{
+ *   name: string,
+ *   imageUrl?: string,
+ * }} SellerForm
+ */
+
 export function AdminSellersPage() {
-  const [sellers, setSellers] = useState([])
+  const [sellers, setSellers] = useState(/** @type {AdminSeller[]} */ ([]))
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [form, setForm] = useState({ name: '' })
-  const [file, setFile] = useState(null)
+  const [error, setError] = useState(/** @type {string | null} */ (null))
+  const [form, setForm] = useState(/** @type {SellerForm} */ ({ name: '' }))
+  const [file, setFile] = useState(/** @type {File | null} */ (null))
   const [saving, setSaving] = useState(false)
-  const [formError, setFormError] = useState(null)
-  const [success, setSuccess] = useState(null)
-  const [editingId, setEditingId] = useState(null)
+  const [formError, setFormError] = useState(/** @type {string | null} */ (null))
+  const [success, setSuccess] = useState(/** @type {string | null} */ (null))
+  const [editingId, setEditingId] = useState(/** @type {string | null} */ (null))
 
   async function loadSellers() {
     setLoading(true)
@@ -22,7 +36,8 @@ export function AdminSellersPage() {
       const list = await api.getAdminSellers()
       setSellers(Array.isArray(list) ? list : [])
     } catch (e) {
-      setError(e?.message || 'Failed to load sellers')
+      const err = /** @type {{ message?: string }} */ (e)
+      setError(err?.message || 'Failed to load sellers')
     } finally {
       setLoading(false)
     }
@@ -32,6 +47,9 @@ export function AdminSellersPage() {
     loadSellers()
   }, [])
 
+  /**
+   * @param {import('react').FormEvent<HTMLFormElement>} e
+   */
   async function handleSubmit(e) {
     e.preventDefault()
     setFormError(null)
@@ -64,12 +82,16 @@ export function AdminSellersPage() {
       setEditingId(null)
       await loadSellers()
     } catch (err) {
-      setFormError(err?.data?.error || err?.message || 'Failed to save')
+      const e = /** @type {{ data?: { error?: string }, message?: string }} */ (err)
+      setFormError(e?.data?.error || e?.message || 'Failed to save')
     } finally {
       setSaving(false)
     }
   }
 
+  /**
+   * @param {string | undefined} id
+   */
   async function handleDelete(id) {
     if (!id) return
     if (!window.confirm('Delete this seller? Properties linked to them will keep the link but the seller will be removed.')) return
@@ -83,7 +105,8 @@ export function AdminSellersPage() {
       }
       await loadSellers()
     } catch (err) {
-      setError(err?.data?.error || err?.message || 'Failed to delete')
+      const e = /** @type {{ data?: { error?: string }, message?: string }} */ (err)
+      setError(e?.data?.error || e?.message || 'Failed to delete')
     }
   }
 
@@ -186,6 +209,7 @@ export function AdminSellersPage() {
                       variant="secondary"
                       className="!px-3 !py-1 text-xs"
                       onClick={() => {
+                        if (!id) return
                         setEditingId(id)
                         setForm({ name: s?.name || '', imageUrl: s?.imageUrl || '' })
                         setFormError(null)

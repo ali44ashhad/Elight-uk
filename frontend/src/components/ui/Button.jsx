@@ -1,11 +1,21 @@
 import React from 'react'
+/**
+ * @param {{
+ *   as?: import('react').ElementType,
+ *   to?: string,
+ *   href?: string,
+ *   variant?: 'primary' | 'secondary' | 'ghost',
+ *   className?: string,
+ *   children: import('react').ReactNode,
+ * } & Omit<import('react').ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'children'>} props
+ */
 export function Button({
   as,
   variant = 'primary',
   className = '',
   ...props
 }) {
-  const Comp = as || 'button'
+  const Comp = /** @type {import('react').ElementType} */ (as || 'button')
   const base =
     'inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60'
 

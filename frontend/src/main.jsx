@@ -7,7 +7,10 @@ import { AuthProvider } from './contexts/AuthContext.jsx'
 import { UserAuthProvider } from './contexts/UserAuthContext.jsx'
 import { ScrollToTop } from './components/Layout/ScrollToTop.jsx'
 
-createRoot(document.getElementById('root')).render(
+const rootEl = document.getElementById('root')
+if (!rootEl) throw new Error('Root element #root not found')
+
+createRoot(rootEl).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>

@@ -3,6 +3,11 @@ import { useEffect, useRef, useState } from 'react'
 import logo from '../../assets/logo.jpeg'
 import { useUserAuth } from '../../contexts/UserAuthContext'
 
+/**
+ * @param {object} props
+ * @param {{ name?: string, email?: string, imageUrl?: string } | null} [props.user]
+ * @param {'sm' | 'md'} [props.size]
+ */
 function HeaderAvatar({ user, size = 'md' }) {
   const letter = String(user?.name || user?.email || '?').charAt(0).toUpperCase()
   const sizeClass = size === 'sm' ? 'h-8 w-8 text-xs' : 'h-9 w-9 text-sm'
@@ -24,6 +29,12 @@ function HeaderAvatar({ user, size = 'md' }) {
   )
 }
 
+/**
+ * @param {{
+ *   navItems: { to: string, label: string }[],
+ *   isDark: boolean,
+ * }} props
+ */
 function HeaderDesktopNav({ navItems, isDark }) {
   return (
     <nav className="hidden items-center gap-8 md:flex" aria-label="Main">
@@ -42,6 +53,15 @@ function HeaderDesktopNav({ navItems, isDark }) {
   )
 }
 
+/**
+ * @param {{
+ *   navItems: { to: string, label: string }[],
+ *   isDark: boolean,
+ *   isOpen: boolean,
+ *   setIsOpen: (isOpen: boolean) => void,
+ *   mobileFooter: import('react').ReactNode,
+ * }} props
+ */
 function HeaderMobileSection({ navItems, isDark, isOpen, setIsOpen, mobileFooter }) {
   return (
     <div
@@ -68,9 +88,13 @@ function HeaderMobileSection({ navItems, isDark, isOpen, setIsOpen, mobileFooter
   )
 }
 
+/**
+ * @param {{ variant?: 'dark' | 'light' }} props
+ */
 export function Header({ variant = 'dark' }) {
   const [isOpen, setIsOpen] = useState(false)
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
+  /** @type {import('react').RefObject<HTMLDivElement | null>} */
   const profileWrapRef = useRef(null)
   const isDark = variant === 'dark'
   const { user, loading, isAuthenticated, logout } = useUserAuth()
@@ -81,8 +105,9 @@ export function Header({ variant = 'dark' }) {
 
   useEffect(() => {
     if (!profileMenuOpen) return
-    const onDown = (e) => {
-      if (profileWrapRef.current && !profileWrapRef.current.contains(e.target)) {
+    const onDown = (/** @type {MouseEvent} */ e) => {
+      const el = profileWrapRef.current
+      if (el && e.target instanceof Node && !el.contains(e.target)) {
         setProfileMenuOpen(false)
       }
     }

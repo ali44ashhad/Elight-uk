@@ -1,4 +1,12 @@
 import React from 'react'
+/**
+ * @param {{
+ *   label?: string,
+ *   hint?: string,
+ *   error?: string,
+ *   className?: string,
+ * } & Omit<import('react').TextareaHTMLAttributes<HTMLTextAreaElement>, 'className'>} props
+ */
 export function Textarea({ label, hint, error, className = '', ...props }) {
   return (
     <label className={`block ${className}`}>

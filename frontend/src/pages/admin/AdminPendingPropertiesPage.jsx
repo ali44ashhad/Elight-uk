@@ -5,6 +5,21 @@ import { Card } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
 import { Input } from '../../components/ui/Input'
 
+/**
+ * @typedef {{
+ *   id?: string,
+ *   _id?: string,
+ *   title?: string,
+ *   location?: string,
+ *   moderationStatus?: string,
+ *   createdByUser?: string | null,
+ *   seller?: { name?: string } | null,
+ * }} AdminPendingProperty
+ */
+
+/**
+ * @param {{ status?: string | null }} props
+ */
 function Pill({ status }) {
   const s = status || 'pending'
   const cls =
@@ -17,11 +32,11 @@ function Pill({ status }) {
 }
 
 export function AdminPendingPropertiesPage() {
-  const [items, setItems] = useState([])
+  const [items, setItems] = useState(/** @type {AdminPendingProperty[]} */ ([]))
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(/** @type {string | null} */ (null))
   const [filter, setFilter] = useState('')
-  const [busyId, setBusyId] = useState(null)
+  const [busyId, setBusyId] = useState(/** @type {string | null} */ (null))
 
   const filtered = useMemo(() => {
     const q = filter.trim().toLowerCase()
@@ -40,7 +55,8 @@ export function AdminPendingPropertiesPage() {
       const list = Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : []
       setItems(list)
     } catch (e) {
-      setError(e?.message || 'Failed to load pending properties')
+      const err = /** @type {{ message?: string }} */ (e)
+      setError(err?.message || 'Failed to load pending properties')
     } finally {
       setLoading(false)
     }
@@ -50,14 +66,20 @@ export function AdminPendingPropertiesPage() {
     load()
   }, [])
 
+  /**
+   * @param {string | undefined} id
+   * @param {string} moderationStatus
+   */
   async function setModeration(id, moderationStatus) {
+    if (!id) return
     setBusyId(id)
     setError(null)
     try {
       await api.updateProperty(id, { moderationStatus })
       await load()
     } catch (e) {
-      setError(e?.message || 'Failed to update')
+      const err = /** @type {{ message?: string }} */ (e)
+      setError(err?.message || 'Failed to update')
     } finally {
       setBusyId(null)
     }

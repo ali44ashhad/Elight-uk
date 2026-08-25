@@ -10,6 +10,21 @@ import { Button } from '../../components/ui/Button'
 import { useUserAuth } from '../../contexts/UserAuthContext'
 import * as api from '../../api'
 
+/**
+ * @typedef {{
+ *   title: string,
+ *   location: string,
+ *   monthlyRent: number,
+ *   investmentAmount: number,
+ *   details: string,
+ *   highlights: string[],
+ *   billsAmount?: number,
+ *   expectedProfit?: number,
+ *   roi?: number,
+ *   tenancyDetails?: string,
+ * }} ProviderPropertyWriteBody
+ */
+
 export function ProviderSubmitPropertyPage() {
   const { isAuthenticated, loading, user } = useUserAuth()
   const nav = useNavigate()
@@ -42,14 +57,14 @@ export function ProviderSubmitPropertyPage() {
   const [expectedProfit, setExpectedProfit] = useState('')
   const [roi, setRoi] = useState('')
   const [tenancyDetails, setTenancyDetails] = useState('')
-  const [highlights, setHighlights] = useState([])
+  const [highlights, setHighlights] = useState(/** @type {string[]} */ ([]))
   const [customHighlight, setCustomHighlight] = useState('')
   const [details, setDetails] = useState('')
 
-  const [files, setFiles] = useState([])
-  const [previewUrls, setPreviewUrls] = useState([])
+  const [files, setFiles] = useState(/** @type {File[]} */ ([]))
+  const [previewUrls, setPreviewUrls] = useState(/** @type {string[]} */ ([]))
   const [busy, setBusy] = useState(false)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(/** @type {string | null} */ (null))
   const [ok, setOk] = useState(false)
 
   useEffect(() => {
@@ -70,6 +85,9 @@ export function ProviderSubmitPropertyPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  /**
+   * @param {import('react').ChangeEvent<HTMLInputElement>} e
+   */
   function handleFilesChange(e) {
     const picked = Array.from(e.target.files || []).filter((f) => f && f.type?.startsWith('image/'))
     if (picked.length === 0) return
@@ -102,6 +120,9 @@ export function ProviderSubmitPropertyPage() {
     e.target.value = ''
   }
 
+  /**
+   * @param {number} index
+   */
   function removeImageAt(index) {
     setFiles((curr) => {
       const arr = Array.isArray(curr) ? curr : []
@@ -119,12 +140,16 @@ export function ProviderSubmitPropertyPage() {
     })
   }
 
+  /**
+   * @param {import('react').FormEvent<HTMLFormElement>} e
+   */
   async function onSubmit(e) {
     e.preventDefault()
     setBusy(true)
     setError(null)
     setOk(false)
     try {
+      /** @type {ProviderPropertyWriteBody} */
       const body = {
         title,
         location,
@@ -149,7 +174,8 @@ export function ProviderSubmitPropertyPage() {
       setOk(true)
       nav('/provider/properties', { replace: true })
     } catch (e2) {
-      setError(e2?.message || 'Failed to submit')
+      const err = /** @type {{ message?: string }} */ (e2)
+      setError(err?.message || 'Failed to submit')
     } finally {
       setBusy(false)
     }
