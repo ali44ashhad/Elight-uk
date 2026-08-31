@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import './lib/pdfkitStandardFonts.js';
 import express from 'express';
 import cors from 'cors';
 import { connectDB } from './lib/db.js';

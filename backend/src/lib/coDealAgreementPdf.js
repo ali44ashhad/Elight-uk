@@ -1,12 +1,10 @@
 import fs from 'fs';
-import path from 'path';
 import { fileURLToPath } from 'url';
+import './pdfkitStandardFonts.js';
 import PDFDocument from 'pdfkit';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ASSETS_DIR = path.join(__dirname, '../assets');
-const SIGNATURE_FONT_PATH = path.join(ASSETS_DIR, 'HomemadeApple-Regular.ttf');
-const LOGO_PATH = path.join(ASSETS_DIR, 'logo.png');
+const SIGNATURE_FONT_PATH = fileURLToPath(new URL('../assets/HomemadeApple-Regular.ttf', import.meta.url));
+const LOGO_PATH = fileURLToPath(new URL('../assets/logo.png', import.meta.url));
 
 const PAGE_REF = '7823/364247 - v1';
 const PEN_INK = '#222222';
